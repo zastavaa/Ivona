@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="sr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#faf6f0" />
+    <title>Za tebe ❤</title>
+    <link rel="preload" href="bela-ruza.png" as="image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cinzel:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ============ TOKENS ============ */
+      :root {
+        /* white stage */
+        --cream-0: #fdfaf4;
+        --cream-1: #f6efe2;
+        --cream-2: #ebe1cc;
+        --gold-1: #c9a558;
+        --gold-2: #8a6a2c;
+        --ink-soft: #4a3a2a;
+
+        /* red stage */
+        --red-0: #2a0408;
+        --red-1: #5a0612;
+        --red-2: #8b0a1f;
+        --red-3: #b91c3a;
+        --rose-soft: #ff8fa3;
+        --gold-hot: #f4c95d;
+        --gold-bright: #ffd60a;
+        --cream-warm: #fff5e1;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        font-family: "Cormorant Garamond", "Playfair Display", serif;
+        background: var(--cream-0);
+        color: var(--ink-soft);
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        height: 100%;
+      }
+      button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+
+      /* paper grain on white stages */
+      .grain {
+        position: fixed; inset: 0; pointer-events: none; z-index: 200;
+        opacity: 0.05; mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      }
+
+      /* ===== STAGES ===== */
+      .stage {
+        position: fixed; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; visibility: hidden;
+        transition: opacity 0.6s ease, visibility 0.6s ease;
+        z-index: 1;
+      }
+      .stage.active { opacity: 1; visibility: visible; z-index: 10; }
+      .stage.below { z-index: 5; }
+
+      /* ============ STAGE 1: PIN ============ */
+      .stage-pin {
+        background:
+          radial-gradient(ellipse at 50% 0%, #fff 0%, var(--cream-0) 60%),
+          var(--cream-0);
+        flex-direction: column;
+        gap: 28px;
+        padding: 32px 20px;
+        overflow-y: auto;
+      }
+      .pin-top {
+        text-align: center;
+        margin-top: 24px;
+        opacity: 0; transform: translateY(-12px);
+        animation: fadeDown 1.2s 0.2s ease forwards;
+      }
+      .pin-top .kicker {
+        font-family: "Cinzel", serif; font-size: 11px;
+        letter-spacing: 0.5em; text-transform: uppercase;
+        color: var(--gold-2); margin-bottom: 10px;
+      }
+      .pin-top h1 {
+        font-family: "Playfair Display", serif; font-weight: 600;
+        font-size: clamp(28px, 5vw, 36px); color: var(--ink-soft);
+        font-style: italic;
+      }
+      .pin-top h1 span {
+        font-family: "Great Vibes", cursive; color: var(--gold-1);
+        font-size: 1.4em; font-weight: 400; font-style: normal;
+      }
+
+      .key-wrap {
+        position: relative;
+        width: 180px; height: 180px;
+        display: grid; place-items: center;
+        opacity: 0; transform: scale(0.8);
+        animation: popIn 1.2s 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      }
+      .key-wrap::before {
+        content: ""; position: absolute; inset: -20px;
+        background: radial-gradient(circle, rgba(201, 165, 88, 0.25), transparent 65%);
+        border-radius: 50%;
+        animation: pulseSoft 3s ease-in-out infinite;
+      }
+      .key-svg { width: 100%; height: 100%; filter: drop-shadow(0 8px 18px rgba(138, 106, 44, 0.35)); }
+      .key-svg .key-body { fill: url(#keyGrad); }
+      .key-svg .key-detail { fill: var(--gold-1); }
+
+      .pin-sub {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 18px; font-style: italic;
+        color: var(--ink-soft); opacity: 0.75;
+        opacity: 0; transform: translateY(-8px);
+        animation: fadeDown 1.2s 0.6s ease forwards;
+      }
+
+      .pin-dots {
+        display: flex; gap: 18px; padding: 8px 0;
+        opacity: 0; transform: translateY(-8px);
+        animation: fadeDown 1.2s 0.7s ease forwards;
+      }
+      .pin-dots .dot {
+        width: 16px; height: 16px; border-radius: 50%;
+        border: 1.5px solid var(--gold-1);
+        background: transparent;
+        transition: all 0.25s ease;
+        position: relative;
+      }
+      .pin-dots .dot.filled {
+        background: var(--gold-1);
+        box-shadow: 0 0 12px rgba(201, 165, 88, 0.6);
+        transform: scale(1.1);
+      }
+      .pin-dots.shake { animation: shake 0.5s ease; }
+
+      .pin-error {
+        min-height: 22px;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 16px; font-style: italic;
+        color: #b91c3a; opacity: 0;
+        transition: opacity 0.3s ease;
+        letter-spacing: 0.02em;
+      }
+      .pin-error.show { opacity: 1; animation: fadeDown 0.3s ease; }
+
+      .pin-pad {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 14px; max-width: 320px; width: 100%;
+        margin-top: 4px;
+        opacity: 0; transform: translateY(12px);
+        animation: fadeUp 1.2s 0.8s ease forwards;
+      }
+      .pin-key {
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: linear-gradient(180deg, #fff, var(--cream-1));
+        border: 1px solid var(--cream-2);
+        font-family: "Playfair Display", serif;
+        font-weight: 500;
+        font-size: 26px;
+        color: var(--ink-soft);
+        box-shadow: 0 4px 10px rgba(74, 58, 42, 0.08), inset 0 1px 0 #fff;
+        transition: all 0.15s ease;
+        display: grid; place-items: center;
+        user-select: none;
+      }
+      .pin-key:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(74, 58, 42, 0.12), inset 0 1px 0 #fff; }
+      .pin-key:active { transform: translateY(0) scale(0.97); box-shadow: 0 2px 4px rgba(74, 58, 42, 0.1), inset 0 1px 0 #fff; }
+      .pin-key.action { font-size: 18px; color: var(--gold-2); }
+      .pin-key.empty { visibility: hidden; }
+
+      /* ============ STAGE 2: LETTER ============ */
+      .stage-letter {
+        background:
+          radial-gradient(ellipse at 50% 30%, #fff 0%, var(--cream-0) 60%),
+          var(--cream-0);
+        flex-direction: column;
+        gap: 32px;
+        padding: 32px 20px;
+      }
+      .stage-letter .open-hint {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic; color: var(--gold-2);
+        letter-spacing: 0.2em; font-size: 14px;
+        opacity: 0; animation: hintPulse 2.4s 1s ease-in-out infinite;
+      }
+      .envelope {
+        position: relative;
+        width: min(440px, 86vw);
+        aspect-ratio: 1.45 / 1;
+        cursor: pointer;
+        opacity: 0; transform: translateY(20px) scale(0.95);
+        animation: popIn 1s 0.2s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+        filter: drop-shadow(0 20px 40px rgba(74, 58, 42, 0.18));
+      }
+      .envelope .env-back {
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, #fbf2e0, #efe0c1);
+        border: 1px solid var(--gold-2);
+        border-radius: 8px;
+      }
+      .envelope .env-letter {
+        position: absolute;
+        left: 6%; right: 6%; top: 6%; bottom: 22%;
+        background: linear-gradient(180deg, #fff, #fbf6e8);
+        border: 1px solid rgba(201, 165, 88, 0.4);
+        border-radius: 4px;
+        padding: 22px 24px;
+        display: flex; flex-direction: column;
+        gap: 8px;
+        transform: translateY(0);
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+        box-shadow: 0 4px 12px rgba(74, 58, 42, 0.08);
+      }
+      .envelope .env-letter .line {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic; color: var(--ink-soft);
+        font-size: 14px; line-height: 1.5;
+        opacity: 0.7;
+      }
+      .envelope .env-letter .line.big {
+        font-family: "Great Vibes", cursive; font-size: 22px;
+        color: var(--gold-2); opacity: 1; margin-top: auto;
+      }
+      .envelope .env-flap {
+        position: absolute;
+        left: -1px; right: -1px; top: -1px;
+        height: 55%;
+        background: linear-gradient(180deg, #f4e6c2, #e6d29c);
+        border: 1px solid var(--gold-2);
+        border-radius: 8px 8px 0 0;
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        transform-origin: top center;
+        transition: transform 0.7s cubic-bezier(0.6, 0, 0.3, 1);
+        z-index: 3;
+      }
+      .envelope .env-front {
+        position: absolute; left: 0; right: 0; bottom: 0;
+        height: 50%;
+        background: linear-gradient(180deg, #efe0c1, #e0cda1);
+        border: 1px solid var(--gold-2);
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        z-index: 2;
+      }
+      .envelope .wax {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 64px; height: 64px;
+        background: radial-gradient(circle at 35% 30%, #d44458, #8b0a1f 70%, #5a0612 100%);
+        border-radius: 50%;
+        transform: translate(-50%, -25%);
+        z-index: 4;
+        box-shadow: 0 4px 12px rgba(139, 10, 31, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+        display: grid; place-items: center;
+        font-family: "Cinzel", serif;
+        font-weight: 600; color: #f4c95d;
+        font-size: 22px; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+      }
+      .envelope.opening .env-flap { transform: rotateX(180deg); }
+      .envelope.opening .env-letter { transform: translateY(-30%); }
+      .envelope.opening .wax { opacity: 0; transform: translate(-50%, -25%) scale(0.5); }
+
+      /* ============ STAGE 3: ROSES ============ */
+      .stage-roses {
+        background: var(--cream-0);
+        z-index: 20;
+        pointer-events: none;
+      }
+      .rose-field {
+        position: absolute; inset: 0;
+        display: grid; place-items: center;
+      }
+      .rose {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 64px; height: 64px;
+        transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(var(--scale, 1));
+        opacity: 0;
+        will-change: transform, opacity;
+        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+        pointer-events: none;
+      }
+      .rose img { width: 100%; height: 100%; display: block; object-fit: contain; }
+      .rose.spiral {
+        animation: roseSpiral 3s cubic-bezier(0.08, 0.72, 0.28, 1) forwards;
+        animation-delay: var(--delay, 0s);
+      }
+      .stage-roses.full .rose.spiral {
+        animation: roseCover 2s cubic-bezier(0.35, 0, 0.2, 1) forwards;
+        animation-delay: var(--delay, 0s);
+      }
+      .stage-roses.fade {
+        opacity: 0;
+        transition: opacity 1.2s ease 0.3s;
+      }
+      @keyframes roseSpiral {
+        0% { transform: translate(-50%, -50%) rotate(0deg) scale(0) translate(0, 0); opacity: 0; }
+        8% { opacity: 1; }
+        20% { transform: translate(-50%, -50%) rotate(calc(var(--rot, 0deg) * 0.3)) scale(0.6) translate(calc(var(--x, 0) * 0.15), calc(var(--y, 0) * 0.15)); opacity: 1; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.25)); }
+        55% { transform: translate(-50%, -50%) rotate(calc(var(--rot, 0deg) * 0.7)) scale(1.05) translate(calc(var(--x, 0) * 0.7), calc(var(--y, 0) * 0.7)); opacity: 1; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.2)); }
+        100% { transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(1) translate(var(--x, 0), var(--y, 0)); opacity: 1; filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.12)); }
+      }
+      @keyframes roseCover {
+        0% { transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(1) translate(var(--x, 0), var(--y, 0)); opacity: 1; filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.12)); }
+        50% { transform: translate(-50%, -50%) rotate(calc(var(--rot, 0deg) + 15deg)) scale(1.06) translate(var(--x, 0), var(--y, 0)); opacity: 0.9; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.18)); }
+        100% { transform: translate(-50%, -50%) rotate(calc(var(--rot, 0deg) + 30deg)) scale(1.15) translate(var(--x, 0), var(--y, 0)); opacity: 0; filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.25)); }
+      }
+
+      /* ============ STAGE 4: RED POSTER ============ */
+      .stage-poster {
+        background:
+          radial-gradient(ellipse at 20% 10%, rgba(244, 201, 93, 0.08), transparent 50%),
+          radial-gradient(ellipse at 80% 90%, rgba(185, 28, 58, 0.4), transparent 60%),
+          linear-gradient(180deg, var(--red-1) 0%, var(--red-0) 100%);
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        color: var(--cream-warm);
+        cursor: default;
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+      .stage-poster::before {
+        content: ""; position: fixed; inset: 0; pointer-events: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'><g fill='%23000' fill-opacity='0.05'><circle cx='30' cy='30' r='14'/><circle cx='20' cy='20' r='8'/><circle cx='90' cy='60' r='18'/><circle cx='80' cy='50' r='6'/><circle cx='150' cy='110' r='16'/><circle cx='40' cy='130' r='10'/><circle cx='120' cy='150' r='12'/></g></svg>");
+        background-size: 220px 220px;
+        opacity: 0.5;
+        z-index: 0;
+      }
+
+      .poster-hero {
+        position: relative; z-index: 1;
+        min-height: 100vh;
+        width: 100%;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        padding: 64px 24px 80px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+      .poster-hero .leopard-strip {
+        position: absolute; left: 0; right: 0; top: 0; height: 14px;
+        background: var(--leopard, transparent);
+        z-index: 2;
+      }
+      .poster-hero .leopard-strip.bottom { top: auto; bottom: 0; }
+      .leopard-bg {
+        background-color: var(--red-0);
+        background-image:
+          radial-gradient(ellipse 18px 26px at 25% 40%, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 65%),
+          radial-gradient(ellipse 14px 20px at 75% 70%, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 65%),
+          radial-gradient(ellipse 20px 28px at 60% 25%, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 65%),
+          radial-gradient(ellipse 12px 18px at 15% 80%, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 65%),
+          radial-gradient(ellipse 22px 30px at 90% 10%, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 65%);
+        background-size: 120px 120px;
+      }
+
+      .poster-kicker {
+        font-family: "Cinzel", serif; font-size: 12px;
+        letter-spacing: 0.55em; text-transform: uppercase;
+        color: var(--gold-hot);
+        margin-bottom: 16px;
+        opacity: 0; transform: translateY(20px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+      .poster-title {
+        font-family: "Playfair Display", serif;
+        font-weight: 800;
+        font-size: clamp(48px, 10vw, 96px);
+        line-height: 1;
+        letter-spacing: -0.02em;
+        background: linear-gradient(180deg, #fff5e1 0%, var(--gold-hot) 70%, var(--gold-bright) 100%);
+        -webkit-background-clip: text; background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 80px rgba(244, 201, 93, 0.3);
+        margin-bottom: 8px;
+        opacity: 0; transform: translateY(20px);
+        transition: opacity 0.9s 0.1s ease, transform 0.9s 0.1s ease;
+      }
+      .poster-title .script {
+        display: block;
+        font-family: "Great Vibes", cursive;
+        font-weight: 400; font-size: 0.7em;
+        background: linear-gradient(180deg, #ff8fa3 0%, #c9184a 100%);
+        -webkit-background-clip: text; background-clip: text;
+        color: transparent;
+      }
+      .poster-subtitle {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic; font-size: 20px;
+        color: var(--rose-soft);
+        margin-top: 8px;
+        opacity: 0; transform: translateY(20px);
+        transition: opacity 0.9s 0.2s ease, transform 0.9s 0.2s ease;
+      }
+      .poster-heart {
+        display: inline-block;
+        font-size: 28px; color: var(--rose-soft);
+        margin-top: 20px;
+        filter: drop-shadow(0 0 20px rgba(255, 143, 163, 0.5));
+        animation: beat 1.4s ease-in-out infinite;
+        opacity: 0;
+        transition: opacity 0.9s 0.3s ease;
+      }
+      .scroll-hint {
+        position: absolute; bottom: 28px; left: 50%;
+        transform: translateX(-50%);
+        font-family: "Cinzel", serif;
+        font-size: 10px; letter-spacing: 0.5em;
+        text-transform: uppercase;
+        color: var(--gold-hot);
+        opacity: 0;
+        transition: opacity 0.9s 0.5s ease;
+      }
+      .scroll-hint::after {
+        content: ""; display: block;
+        width: 1px; height: 36px;
+        background: linear-gradient(180deg, var(--gold-hot), transparent);
+        margin: 10px auto 0;
+        animation: scrollPulse 2s ease-in-out infinite;
+      }
+      .in.poster-hero .poster-kicker, .in.poster-hero .poster-title, .in.poster-hero .poster-subtitle,
+      .in.poster-hero .poster-heart, .in.poster-hero .scroll-hint { opacity: 1; transform: translateY(0); }
+
+      /* photo collage */
+      .photo-collage {
+        position: relative;
+        margin: 56px auto 0;
+        width: min(720px, 92vw);
+        height: min(520px, 90vw);
+        opacity: 0; transform: scale(0.95);
+        transition: opacity 1s 0.3s ease, transform 1s 0.3s ease;
+      }
+      .in.poster-hero .photo-collage { opacity: 1; transform: scale(1); }
+      .polaroid {
+        position: absolute;
+        background: #fffaf0;
+        padding: 12px 12px 48px;
+        box-shadow: 0 18px 38px rgba(0, 0, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.25);
+        cursor: pointer;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        overflow: hidden;
+      }
+      .polaroid:hover { transform: scale(1.05) translateY(-4px) rotate(0deg) !important; box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55), 0 6px 12px rgba(0, 0, 0, 0.3); z-index: 10; }
+      .polaroid .photo {
+        width: 100%; aspect-ratio: 1;
+        background: linear-gradient(135deg, var(--rose-soft), #c9184a);
+        position: relative; overflow: hidden;
+        display: grid; place-items: center;
+      }
+      .polaroid .photo img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+      }
+      .polaroid .photo .ph {
+        color: rgba(255, 255, 255, 0.9);
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 14px;
+        text-align: center;
+        padding: 12px;
+      }
+      .polaroid .caption {
+        position: absolute; bottom: 8px; left: 0; right: 0;
+        text-align: center;
+        font-family: "Cinzel", serif; font-size: 10px;
+        letter-spacing: 0.3em; text-transform: uppercase;
+        color: var(--ink-soft);
+      }
+      .p1 { top: 0; left: 2%; width: 54%; transform: rotate(-2.5deg); z-index: 3; }
+      .p2 { top: 3%; right: 2%; width: 40%; transform: rotate(4deg); z-index: 2; }
+      .p3 { bottom: 4%; left: 0; width: 42%; transform: rotate(1.5deg); z-index: 4; }
+      .p4 { bottom: 0; right: 0; width: 48%; transform: rotate(-3.5deg); z-index: 5; }
+
+      /* section wrapper */
+      .poster-section {
+        position: relative; z-index: 1;
+        width: 100%;
+        padding: 100px 24px;
+        max-width: 1100px;
+        margin: 0 auto;
+        flex-shrink: 0;
+        box-sizing: border-box;
+      }
+      .gold-divider {
+        width: 60px; height: 1px;
+        background: var(--gold-hot);
+        margin: 0 auto 28px;
+        position: relative;
+      }
+      .gold-divider::before, .gold-divider::after {
+        content: ""; position: absolute; top: -3px;
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--gold-hot);
+      }
+      .gold-divider::before { left: -16px; }
+      .gold-divider::after { right: -16px; }
+
+      .section-title {
+        font-family: "Great Vibes", cursive;
+        font-size: clamp(40px, 7vw, 64px);
+        color: var(--gold-hot);
+        text-align: center;
+        margin-bottom: 8px;
+        line-height: 1.1;
+        opacity: 0; transform: translateY(30px);
+        transition: opacity 0.9s ease, transform 0.9s ease;
+      }
+      .section-tag {
+        font-family: "Cinzel", serif;
+        text-align: center;
+        font-size: 11px;
+        letter-spacing: 0.5em; text-transform: uppercase;
+        color: var(--rose-soft);
+        margin-bottom: 40px;
+        opacity: 0; transform: translateY(30px);
+        transition: opacity 0.9s 0.1s ease, transform 0.9s 0.1s ease;
+      }
+      .in.poster-section .section-title, .in.poster-section .section-tag { opacity: 1; transform: translateY(0); }
+
+      /* section 1: text + big heart */
+      .duo { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
+      .love-text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(18px, 1.6vw, 21px);
+        line-height: 1.85;
+        color: var(--cream-warm);
+        opacity: 0; transform: translateX(-30px);
+        transition: opacity 0.9s 0.2s ease, transform 0.9s 0.2s ease;
+      }
+      .love-text p + p { margin-top: 18px; }
+      .love-text .drop {
+        font-family: "Playfair Display", serif;
+        font-weight: 600; font-size: 3.2em;
+        float: left; line-height: 0.85;
+        color: var(--gold-hot);
+        margin: 6px 12px 0 0;
+        text-shadow: 0 0 24px rgba(244, 201, 93, 0.3);
+      }
+      .love-text .sign {
+        margin-top: 24px;
+        font-family: "Great Vibes", cursive;
+        font-size: 36px; color: var(--rose-soft);
+        text-align: right;
+      }
+      .in.poster-section .love-text { opacity: 1; transform: translateX(0); }
+
+      .big-heart {
+        position: relative;
+        width: min(420px, 92%);
+        margin-left: auto;
+        margin-right: auto;
+        opacity: 0; transform: translateX(30px) scale(0.92);
+        transition: opacity 1s 0.3s ease, transform 1s 0.3s ease;
+        filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.45));
+        animation: heartBeatSoft 2.6s ease-in-out infinite;
+        animation-delay: 1.4s;
+      }
+      .in.poster-section .big-heart { opacity: 1; transform: translateX(0) scale(1); }
+      .big-heart svg { width: 100%; height: auto; display: block; overflow: visible; }
+      @keyframes heartBeatSoft {
+        0%, 100% { transform: scale(1); }
+        14% { transform: scale(1.04); }
+        28% { transform: scale(1); }
+        42% { transform: scale(1.025); }
+      }
+
+      /* section 2: cats + sparkles */
+      .cats-deco { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 40px; }
+      .cats-stage {
+        position: relative;
+        height: 320px;
+        opacity: 0; transform: translateX(-30px);
+        transition: opacity 0.9s 0.2s ease, transform 0.9s 0.2s ease;
+        filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
+        animation: glowPulse 4s ease-in-out infinite;
+      }
+      .in.poster-section .cats-stage { opacity: 1; transform: translateX(0); }
+      .cat {
+        position: absolute; bottom: 0;
+        width: 220px; height: 220px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        clip-path: ellipse(44% 46% at 50% 52%);
+      }
+      .cat.black { left: 0; }
+      .cat.white { right: 0; }
+      .cat.white { clip-path: ellipse(44% 46% at 50% 52%); }
+      @keyframes glowPulse { 0%, 100% { filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35)); } 50% { filter: drop-shadow(0 18px 34px rgba(244, 201, 93, 0.25)); } }
+
+      .buket-wrap {
+        position: relative;
+        width: min(520px, 95%);
+        margin-left: auto;
+        margin-right: auto;
+        opacity: 0; transform: translateX(30px) scale(0.95);
+        transition: opacity 1s 0.3s ease, transform 1s 0.3s ease;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .in.poster-section .buket-wrap { opacity: 1; transform: translateX(0) scale(1); }
+      .buket-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.4));
+        border-radius: 4px;
+      }
+
+      /* finale */
+      .poster-finale {
+        position: relative; z-index: 1;
+        width: 100%;
+        padding: 80px 24px 100px;
+        text-align: center;
+        background:
+          linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.4)),
+          var(--leopard-bg, transparent);
+        background-size: auto, 200px 200px;
+        flex-shrink: 0;
+        box-sizing: border-box;
+      }
+      .poster-finale h2 {
+        font-family: "Playfair Display", serif;
+        font-weight: 700;
+        font-size: clamp(28px, 5vw, 48px);
+        color: var(--cream-warm);
+        line-height: 1.3;
+        max-width: 700px;
+        margin: 0 auto 20px;
+        opacity: 0; transform: translateY(20px);
+        transition: opacity 0.9s ease, transform 0.9s ease;
+      }
+      .poster-finale .signature {
+        font-family: "Great Vibes", cursive;
+        font-size: 56px;
+        color: var(--gold-hot);
+        opacity: 0; transform: translateY(20px);
+        transition: opacity 0.9s 0.2s ease, transform 0.9s 0.2s ease;
+      }
+      .in.poster-finale h2, .in.poster-finale .signature { opacity: 1; transform: translateY(0); }
+
+      /* restart button */
+      .restart {
+        position: fixed; top: 20px; right: 20px;
+        z-index: 50;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(8px);
+        color: var(--gold-hot);
+        padding: 10px 16px;
+        border-radius: 100px;
+        font-family: "Cinzel", serif; font-size: 11px;
+        letter-spacing: 0.3em; text-transform: uppercase;
+        border: 1px solid rgba(244, 201, 93, 0.4);
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.4s ease, transform 0.4s ease;
+      }
+      .restart.show { opacity: 1; pointer-events: auto; }
+      .restart:hover { transform: scale(1.05); }
+
+      /* ============ ANIMATIONS ============ */
+      @keyframes fadeDown { to { opacity: 1; transform: translateY(0); } }
+      @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+      @keyframes popIn { to { opacity: 1; transform: scale(1) translateY(0); } }
+      @keyframes pulseSoft { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-8px); }
+        40% { transform: translateX(8px); }
+        60% { transform: translateX(-6px); }
+        80% { transform: translateX(6px); }
+      }
+      @keyframes beat { 0%, 100% { transform: scale(1); } 14% { transform: scale(1.15); } 28% { transform: scale(1); } 42% { transform: scale(1.1); } }
+      @keyframes hintPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+      @keyframes scrollPulse { 0%, 100% { opacity: 0.3; transform: scaleY(0.6); } 50% { opacity: 1; transform: scaleY(1); } }
+      @keyframes float { 0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); } 50% { transform: translateY(-6px) rotate(calc(var(--r, 0deg) + 4deg)); } }
+      @keyframes floatY { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-12px) rotate(8deg); } }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @keyframes floatY { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-12px) rotate(8deg); } }
+
+      /* ============ RESPONSIVE ============ */
+      @media (max-width: 760px) {
+        .duo, .cats-deco { grid-template-columns: 1fr; gap: 36px; }
+        .duo { grid-template-columns: 1.2fr 0.8fr; }
+        .big-heart { margin: 0 auto; max-width: 300px; }
+        .buket-wrap { margin: 0 auto; max-width: 300px; }
+        .cats-stage { height: 240px; }
+        .cat { width: 160px; height: 160px; }
+        .poster-section { padding: 70px 18px; }
+        .p1 { width: 52%; }
+        .p2 { width: 38%; }
+        .p3 { width: 40%; }
+        .p4 { width: 46%; }
+        .photo-collage { height: 340px; }
+        .buket-img { border-radius: 3px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain"></div>
+
+    <!-- shared SVG defs (leopard pattern + rose gradients) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+      <defs>
+        <pattern id="leopard" patternUnits="userSpaceOnUse" width="44" height="44" patternTransform="rotate(12)">
+          <rect width="44" height="44" fill="#c9a558" />
+          <ellipse cx="10" cy="12" rx="4.5" ry="5.5" fill="#2a1408" />
+          <ellipse cx="30" cy="18" rx="3" ry="4" fill="#2a1408" />
+          <ellipse cx="20" cy="30" rx="5" ry="3.5" fill="#2a1408" />
+          <ellipse cx="36" cy="34" rx="3" ry="3" fill="#2a1408" />
+          <circle cx="6" cy="34" r="1.6" fill="#2a1408" />
+          <circle cx="15" cy="6" r="1.2" fill="#2a1408" />
+          <circle cx="40" cy="8" r="1" fill="#2a1408" />
+          <circle cx="26" cy="40" r="1.4" fill="#2a1408" />
+        </pattern>
+        <radialGradient id="rPetals" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#ff8fa3" />
+          <stop offset="55%" stop-color="#c9184a" />
+          <stop offset="100%" stop-color="#5a0612" />
+        </radialGradient>
+        <radialGradient id="rInner" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#c9184a" />
+          <stop offset="100%" stop-color="#5a0612" />
+        </radialGradient>
+        <radialGradient id="rLight" cx="40%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#ffd1dc" />
+          <stop offset="60%" stop-color="#ff8fa3" />
+          <stop offset="100%" stop-color="#c9184a" />
+        </radialGradient>
+      </defs>
+    </svg>
+
+    <!-- ================== STAGE 1: PIN ================== -->
+    <section class="stage stage-pin active" id="stagePin" aria-label="Unesi PIN">
+      <div class="pin-top">
+        <div class="kicker">malo tajno</div>
+        <h1>Unesi <span>pin</span> da otvoriš</h1>
+      </div>
+
+      <div class="key-wrap" aria-hidden="true">
+        <svg class="key-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="keyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#e8c876" />
+              <stop offset="50%" stop-color="#c9a558" />
+              <stop offset="100%" stop-color="#8a6a2c" />
+            </linearGradient>
+          </defs>
+          <!-- key bow (head) -->
+          <circle class="key-body" cx="65" cy="100" r="38" />
+          <circle cx="65" cy="100" r="20" fill="#fdfaf4" />
+          <circle class="key-detail" cx="65" cy="100" r="20" />
+          <!-- key shaft -->
+          <rect class="key-body" x="100" y="92" width="80" height="16" rx="2" />
+          <!-- key teeth -->
+          <rect class="key-body" x="148" y="108" width="10" height="18" rx="2" />
+          <rect class="key-body" x="166" y="108" width="10" height="22" rx="2" />
+          <!-- highlight -->
+          <ellipse cx="55" cy="85" rx="12" ry="6" fill="#fff" opacity="0.4" />
+        </svg>
+      </div>
+
+      <div class="pin-sub">četiri cifre, samo naše</div>
+
+      <div class="pin-dots" id="pinDots" aria-live="polite">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="pin-error" id="pinError" role="alert"></div>
+
+      <div class="pin-pad" id="pinPad">
+        <button class="pin-key" data-n="1">1</button>
+        <button class="pin-key" data-n="2">2</button>
+        <button class="pin-key" data-n="3">3</button>
+        <button class="pin-key" data-n="4">4</button>
+        <button class="pin-key" data-n="5">5</button>
+        <button class="pin-key" data-n="6">6</button>
+        <button class="pin-key" data-n="7">7</button>
+        <button class="pin-key" data-n="8">8</button>
+        <button class="pin-key" data-n="9">9</button>
+        <button class="pin-key action" data-n="del" aria-label="Obriši">⌫</button>
+        <button class="pin-key" data-n="0">0</button>
+        <button class="pin-key empty" aria-hidden="true">·</button>
+      </div>
+    </section>
+
+    <!-- ================== STAGE 2: LETTER ================== -->
+    <section class="stage stage-letter" id="stageLetter" aria-label="Pismo">
+      <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Klikni da otvoriš pismo">
+        <div class="env-back"></div>
+        <div class="env-letter">
+          <div class="line">Draga Ivona,</div>
+          <div class="line">pre nego što otvoriš — znaš da te volim.</div>
+          <div class="line">A sad još malo, samo za tebe.</div>
+          <div class="line big">— tvoj Nikola</div>
+        </div>
+        <div class="env-front"></div>
+        <div class="env-flap"></div>
+        <div class="wax">❤</div>
+      </div>
+      <div class="open-hint">klikni na pismo</div>
+    </section>
+
+    <!-- ================== STAGE 3: ROSES ================== -->
+    <section class="stage stage-roses" id="stageRoses" aria-hidden="true">
+      <div class="rose-field" id="roseField"></div>
+    </section>
+
+    <!-- ================== STAGE 4: RED POSTER ================== -->
+    <section class="stage stage-poster" id="stagePoster">
+      <!-- HERO -->
+      <div class="poster-hero leopard-bg" data-in>
+        <div class="poster-kicker">dve godine · jedna ljubav</div>
+        <h1 class="poster-title">
+          <span class="script">za tebe,</span>
+          zauvek
+        </h1>
+        <div class="poster-subtitle">i sve što dolazi posle</div>
+        <div class="poster-heart">❤</div>
+
+        <div class="photo-collage">
+          <div class="polaroid p1" data-photo="1">
+            <div class="photo">
+              <div class="ph">tvoja slika ❤<br /><small>klikni da dodaš</small></div>
+            </div>
+            <div class="caption">ti</div>
+          </div>
+          <div class="polaroid p2" data-photo="2">
+            <div class="photo">
+              <div class="ph">naš trenutak<br /><small>klikni da dodaš</small></div>
+            </div>
+            <div class="caption">mi</div>
+          </div>
+          <div class="polaroid p3" data-photo="3">
+            <div class="photo">
+              <div class="ph">mali zauvek<br /><small>klikni da dodaš</small></div>
+            </div>
+            <div class="caption">zajedno</div>
+          </div>
+          <div class="polaroid p4" data-photo="4">
+            <div class="photo">
+              <div class="ph">osmeh ❤<br /><small>klikni da dodaš</small></div>
+            </div>
+            <div class="caption">✦</div>
+          </div>
+        </div>
+
+        <div class="scroll-hint">skroluj dole</div>
+      </div>
+
+      <!-- SECTION 1: TEXT + BOUQUET -->
+      <div class="poster-section" data-in>
+        <div class="gold-divider"></div>
+        <h2 class="section-title">Pismo za tebe</h2>
+        <div class="section-tag">— od srca —</div>
+
+        <div class="duo">
+          <div class="love-text">
+            <p>
+              <span class="drop">I</span>vona, pre dve godine rekao sam ti „volim te"
+              prvi put — i od tada ni jedan dan nije prošao a da to ne osetim
+              iznova. Ti si mi postala najlepša navika, najsigurnije mesto, i
+              razlog zašto ustajem sa osmehom.
+            </p>
+            <p>
+              Sa tobom sam naučio da ljubav nije velika reč — ljubav je kad
+              te čekam sa večerom, kad te pogledam i zaboravim šta sam hteo da
+              kažem, kad se smeješ u tri ujutru i ja shvatam da imam sve.
+            </p>
+            <p>
+              Biraš me svaki dan. Hvala ti. Ja biram tebe — danas, sutra,
+              i u svakoj verziji nas koju budemo pisali zajedno.
+            </p>
+            <p>
+              Srećan nam drugi rođendan ljubavi. Jedva čekam sve one koji
+              dolaze posle — sa tobom, jedan za drugim.
+            </p>
+            <div class="sign">voli te tvoj Nikola ❤</div>
+          </div>
+
+          <div class="buket-wrap">
+            <img src="beli-buket.png" alt="Buket" class="buket-img" loading="lazy" />
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: CATS + SPARKLES -->
+      <div class="poster-section" data-in>
+        <div class="gold-divider"></div>
+        <h2 class="section-title">Mali svet</h2>
+        <div class="section-tag">— naše male face —</div>
+
+        <div class="cats-deco">
+          <!-- CATS -->
+          <div class="cats-stage">
+            <img class="cat black" src="cats/kitten1.jpg" alt="Maca" loading="lazy" />
+            <img class="cat white" src="cats/kitten2.jpg" alt="Maca" loading="lazy" />
+          </div>
+
+          <!-- BIG LEOPARD HEART (pored maca) -->
+          <div class="big-heart">
+            <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <radialGradient id="heartGlow" cx="50%" cy="50%" r="55%">
+                  <stop offset="0%" stop-color="rgba(244, 201, 93, 0.35)" />
+                  <stop offset="70%" stop-color="rgba(244, 201, 93, 0)" />
+                </radialGradient>
+              </defs>
+              <circle cx="200" cy="200" r="180" fill="url(#heartGlow)" />
+              <path d="M200 360 C 80 280 30 210 30 140 C 30 75 80 30 140 30 C 175 30 195 50 200 70 C 205 50 225 30 260 30 C 320 30 370 75 370 140 C 370 210 320 280 200 360 Z"
+                fill="url(#leopard)" stroke="#2a1408" stroke-width="4" stroke-linejoin="round" />
+              <path d="M200 340 C 95 270 55 210 55 145 C 55 90 95 55 140 55 C 170 55 188 72 200 95 C 212 72 230 55 260 55 C 305 55 345 90 345 145 C 345 210 305 270 200 340 Z"
+                fill="none" stroke="#f4c95d" stroke-width="2" stroke-linejoin="round" opacity="0.55" />
+              <path d="M95 110 Q 130 75 175 80" fill="none" stroke="#fff5e1" stroke-width="6" stroke-linecap="round" opacity="0.45" />
+              <path d="M85 140 Q 105 110 135 105" fill="none" stroke="#fff5e1" stroke-width="3" stroke-linecap="round" opacity="0.35" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- FINALE -->
+      <div class="poster-finale leopard-bg" data-in>
+        <h2>Ivona, biram tebe. Danas, sutra, i u svakoj verziji nas.</h2>
+        <div class="signature">— tvoj Nikola, zauvek ❤</div>
+      </div>
+    </section>
+
+    <button class="restart" id="restart">↻ Ponovo</button>
+
+    <script>
+      /* ========== STAGE 1: PIN ========== */
+      const CORRECT_PIN = "1806";
+      const dots = [...document.querySelectorAll("#pinDots .dot")];
+      const pad = document.getElementById("pinPad");
+      const errEl = document.getElementById("pinError");
+      const dotsEl = document.getElementById("pinDots");
+      let pin = "";
+
+      function renderDots() {
+        dots.forEach((d, i) => d.classList.toggle("filled", i < pin.length));
+      }
+      function showError(msg) {
+        errEl.textContent = msg;
+        errEl.classList.add("show");
+        dotsEl.classList.add("shake");
+        setTimeout(() => dotsEl.classList.remove("shake"), 500);
+      }
+      function clearError() { errEl.classList.remove("show"); errEl.textContent = ""; }
+
+      pad.addEventListener("click", (e) => {
+        const k = e.target.closest(".pin-key");
+        if (!k || k.classList.contains("empty")) return;
+        const n = k.dataset.n;
+        clearError();
+        if (n === "del") {
+          pin = pin.slice(0, -1);
+        } else if (pin.length < 4) {
+          pin += n;
+        }
+        renderDots();
+        if (pin.length === 4) {
+          if (pin === CORRECT_PIN) {
+            // success
+            setTimeout(() => goToLetter(), 350);
+          } else {
+            showError("Pogrešan pin, pokušaj ponovo");
+            setTimeout(() => { pin = ""; renderDots(); }, 700);
+          }
+        }
+      });
+
+      // also support keyboard
+      window.addEventListener("keydown", (e) => {
+        if (!document.getElementById("stagePin").classList.contains("active")) return;
+        if (/^[0-9]$/.test(e.key)) {
+          pad.querySelector(`[data-n="${e.key}"]`).click();
+        } else if (e.key === "Backspace") {
+          pad.querySelector(`[data-n="del"]`).click();
+        }
+      });
+
+      /* ========== STAGE 2: LETTER ========== */
+      const envelope = document.getElementById("envelope");
+      function goToLetter() {
+        document.getElementById("stagePin").classList.remove("active");
+        document.getElementById("stagePin").classList.add("below");
+        document.getElementById("stageLetter").classList.add("active");
+      }
+      function openEnvelope() {
+        envelope.classList.add("opening");
+        setTimeout(() => spawnRoses(), 900);
+      }
+      envelope.addEventListener("click", openEnvelope);
+      envelope.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openEnvelope(); } });
+
+      /* ========== STAGE 3: ROSES ========== */
+      const roseField = document.getElementById("roseField");
+      const ROSES = 80;
+      const ROSE_IMG = "bela-ruza.png";
+      function spawnRoses() {
+        document.getElementById("stageLetter").classList.remove("active");
+        document.getElementById("stageRoses").classList.add("active");
+        roseField.innerHTML = "";
+        const preload = new Image();
+        preload.src = ROSE_IMG;
+        const TURNS = 5;
+        for (let i = 0; i < ROSES; i++) {
+          const r = document.createElement("div");
+          r.className = "rose spiral";
+          const img = document.createElement("img");
+          img.src = ROSE_IMG;
+          img.alt = "";
+          img.draggable = false;
+          img.loading = "eager";
+          r.appendChild(img);
+          const t = i / ROSES;
+          const angle = t * Math.PI * 2 * TURNS;
+          const dist = 40 + t * 720;
+          const rot = Math.random() * 360;
+          r.style.setProperty("--rot", `${rot.toFixed(0)}deg`);
+          r.style.setProperty("--x", `${(Math.cos(angle) * dist).toFixed(0)}px`);
+          r.style.setProperty("--y", `${(Math.sin(angle) * dist).toFixed(0)}px`);
+          r.style.setProperty("--delay", `${(Math.pow(t, 0.7) * 2200).toFixed(0)}ms`);
+          const size = 60 + Math.random() * 50;
+          r.style.width = `${size.toFixed(0)}px`;
+          r.style.height = `${size.toFixed(0)}px`;
+          roseField.appendChild(r);
+        }
+        setTimeout(() => {
+          document.getElementById("stageRoses").classList.add("full");
+        }, 3000);
+        setTimeout(() => {
+          document.getElementById("stageRoses").classList.add("fade");
+        }, 5000);
+        setTimeout(showPoster, 6200);
+      }
+
+      /* ========== STAGE 4: POSTER ========== */
+      function showPoster() {
+        document.getElementById("stageRoses").classList.remove("active");
+        const poster = document.getElementById("stagePoster");
+        poster.classList.add("active");
+        document.body.style.overflow = "hidden";
+        poster.style.overflowY = "auto";
+        poster.style.overflowX = "hidden";
+        document.body.style.overflow = "hidden";
+        // observe elements
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) en.target.classList.add("in");
+          });
+        }, { threshold: 0.05, rootMargin: "0px 0px -10% 0px" });
+        poster.querySelectorAll("[data-in]").forEach((el) => io.observe(el));
+        // show restart
+        document.getElementById("restart").classList.add("show");
+        // FALLBACK: if IO doesn't fire fast enough (programmatic scroll, headless, etc)
+        // reveal hero immediately and others on scroll
+        setTimeout(() => {
+          poster.querySelectorAll("[data-in]").forEach((el) => {
+            const r = el.getBoundingClientRect();
+            if (r.top < window.innerHeight * 0.9 && r.bottom > 0) el.classList.add("in");
+          });
+        }, 100);
+        // Also mark hero in
+        const hero = poster.querySelector(".poster-hero");
+        if (hero) hero.classList.add("in");
+      }
+
+      // restart
+      document.getElementById("restart").addEventListener("click", () => {
+        location.reload();
+      });
+
+      /* ========== PHOTO UPLOAD ========== */
+      document.querySelectorAll(".polaroid").forEach((card) => {
+        const slot = card.dataset.photo;
+        const photo = card.querySelector(".photo");
+        const input = document.createElement("input");
+        input.type = "file"; input.accept = "image/*";
+        input.style.display = "none";
+        card.appendChild(input);
+
+        // restore from localStorage
+        try {
+          const saved = localStorage.getItem(`love_photo_${slot}`);
+          if (saved) {
+            photo.innerHTML = "";
+            const img = document.createElement("img");
+            img.src = saved;
+            photo.appendChild(img);
+          }
+        } catch {}
+
+        card.addEventListener("click", () => input.click());
+        input.addEventListener("change", (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const data = ev.target.result;
+            try { localStorage.setItem(`love_photo_${slot}`, data); } catch {}
+            photo.innerHTML = "";
+            const img = document.createElement("img");
+            img.src = data;
+            photo.appendChild(img);
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+    </script>
+  </body>
+</html>
