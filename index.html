@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#faf6f0" />
     <title>Za tebe ❤</title>
-    <link rel="preload" href="bela-ruza.png" as="image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -73,8 +72,40 @@
         flex-direction: column;
         gap: 28px;
         padding: 32px 20px;
+        position: relative;
         overflow-y: auto;
       }
+
+      /* floating flowers bg */
+      .float-flowers {
+        position: absolute; inset: 0;
+        pointer-events: none; overflow: hidden;
+        z-index: 0;
+      }
+      .float-flower {
+        position: absolute;
+        width: 36px; height: 36px;
+        opacity: 0.16;
+        animation: flowerFloat 22s ease-in-out infinite;
+      }
+      .float-flower svg { width: 100%; height: 100%; display: block; overflow: visible; }
+      .float-flower:nth-child(1) { top: 8%; left: 6%; animation-delay: 0s; }
+      .float-flower:nth-child(2) { top: 18%; right: 8%; animation-delay: -4s; animation-duration: 26s; width: 28px; height: 28px; }
+      .float-flower:nth-child(3) { bottom: 28%; left: 12%; animation-delay: -8s; width: 42px; height: 42px; }
+      .float-flower:nth-child(4) { top: 48%; right: 5%; animation-delay: -13s; animation-duration: 20s; }
+      .float-flower:nth-child(5) { bottom: 12%; right: 20%; animation-delay: -6s; animation-duration: 24s; width: 30px; height: 30px; }
+      .float-flower:nth-child(6) { top: 5%; left: 42%; animation-delay: -10s; width: 24px; height: 24px; }
+      .float-flower:nth-child(7) { bottom: 35%; left: 55%; animation-delay: -16s; animation-duration: 28s; }
+      .float-flower:nth-child(8) { top: 60%; left: 2%; animation-delay: -2s; animation-duration: 21s; width: 32px; height: 32px; }
+      @keyframes flowerFloat {
+        0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 0.14; }
+        25% { transform: translate(28px, -18px) rotate(80deg) scale(1.1); opacity: 0.22; }
+        50% { transform: translate(8px, -36px) rotate(170deg) scale(0.92); opacity: 0.16; }
+        75% { transform: translate(-18px, -12px) rotate(260deg) scale(1.04); opacity: 0.2; }
+      }
+
+      .pin-ui { position: relative; z-index: 2; }
+
       .pin-top {
         text-align: center;
         margin-top: 24px;
@@ -105,11 +136,11 @@
       }
       .key-wrap::before {
         content: ""; position: absolute; inset: -20px;
-        background: radial-gradient(circle, rgba(201, 165, 88, 0.25), transparent 65%);
+        background: radial-gradient(circle, rgba(185, 28, 58, 0.22), transparent 65%);
         border-radius: 50%;
         animation: pulseSoft 3s ease-in-out infinite;
       }
-      .key-svg { width: 100%; height: 100%; filter: drop-shadow(0 8px 18px rgba(138, 106, 44, 0.35)); }
+      .key-svg { width: 100%; height: 100%; filter: drop-shadow(0 8px 22px rgba(139, 10, 31, 0.4)); }
       .key-svg .key-body { fill: url(#keyGrad); }
       .key-svg .key-detail { fill: var(--gold-1); }
 
@@ -269,7 +300,7 @@
       .envelope.opening .env-letter { transform: translateY(-30%); }
       .envelope.opening .wax { opacity: 0; transform: translate(-50%, -25%) scale(0.5); }
 
-      /* ============ STAGE 3: ROSES ============ */
+      /* ============ STAGE 3: BLOOM BURST ============ */
       .stage-roses {
         background: var(--cream-0);
         z-index: 20;
@@ -277,42 +308,53 @@
       }
       .rose-field {
         position: absolute; inset: 0;
-        display: grid; place-items: center;
+        overflow: hidden;
       }
-      .rose {
+      .bloom {
         position: absolute;
         top: 50%; left: 50%;
-        width: 64px; height: 64px;
-        transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(var(--scale, 1));
+        transform: translate(calc(-50% + var(--x-start, 0)), calc(-50% + var(--y-start, 0))) rotate(var(--rot, 0deg)) scale(0.5);
         opacity: 0;
         will-change: transform, opacity;
-        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
         pointer-events: none;
       }
-      .rose img { width: 100%; height: 100%; display: block; object-fit: contain; }
-      .rose.spiral {
-        animation: roseSpiral 3s cubic-bezier(0.08, 0.72, 0.28, 1) forwards;
+      .bloom svg {
+        width: 100%; height: 100%; display: block; overflow: visible;
+        filter: drop-shadow(0 6px 18px rgba(74, 58, 42, 0.1));
+      }
+      .bloom.enter {
+        animation: bloomEnter 3.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         animation-delay: var(--delay, 0s);
       }
-      .stage-roses.full .rose.spiral {
-        animation: roseCover 2s cubic-bezier(0.35, 0, 0.2, 1) forwards;
-        animation-delay: var(--delay, 0s);
+      .bloom.spiral {
+        animation: bloomSpiral 5.5s cubic-bezier(0.45, 0, 0.15, 1) forwards;
+        animation-delay: var(--spiral-delay, 0s);
+      }
+      .stage-roses.spiral-phase .bloom svg {
+        filter: drop-shadow(0 8px 22px rgba(74, 58, 42, 0.14));
+      }
+      .stage-roses.fade .bloom {
+        animation: bloomFade 1.6s ease forwards !important;
+        animation-delay: var(--fade-delay, 0s) !important;
       }
       .stage-roses.fade {
         opacity: 0;
         transition: opacity 1.2s ease 0.3s;
       }
-      @keyframes roseSpiral {
-        0% { transform: translate(-50%, -50%) rotate(0deg) scale(0) translate(0, 0); opacity: 0; }
-        8% { opacity: 1; }
-        20% { transform: translate(-50%, -50%) rotate(calc(var(--rot, 0deg) * 0.3)) scale(0.6) translate(calc(var(--x, 0) * 0.15), calc(var(--y, 0) * 0.15)); opacity: 1; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.25)); }
-        55% { transform: translate(-50%, -50%) rotate(calc(var(--rot, 0deg) * 0.7)) scale(1.05) translate(calc(var(--x, 0) * 0.7), calc(var(--y, 0) * 0.7)); opacity: 1; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.2)); }
-        100% { transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(1) translate(var(--x, 0), var(--y, 0)); opacity: 1; filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.12)); }
+      @keyframes bloomEnter {
+        0% { transform: translate(calc(-50% + var(--x-start, 0)), calc(-50% + var(--y-start, 0))) rotate(var(--rot, 0deg)) scale(0.35); opacity: 0; }
+        10% { opacity: 1; }
+        100% { transform: translate(calc(-50% + var(--x-end, 0)), calc(-50% + var(--y-end, 0))) rotate(calc(var(--rot, 0deg) + 22deg)) scale(1); opacity: 0.98; }
       }
-      @keyframes roseCover {
-        0% { transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(1) translate(var(--x, 0), var(--y, 0)); opacity: 1; filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.12)); }
-        50% { transform: translate(-50%, -50%) rotate(calc(var(--rot, 0deg) + 15deg)) scale(1.06) translate(var(--x, 0), var(--y, 0)); opacity: 0.9; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.18)); }
-        100% { transform: translate(-50%, -50%) rotate(calc(var(--rot, 0deg) + 30deg)) scale(1.15) translate(var(--x, 0), var(--y, 0)); opacity: 0; filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.25)); }
+      @keyframes bloomSpiral {
+        0% { transform: translate(calc(-50% + var(--x-end, 0)), calc(-50% + var(--y-end, 0))) rotate(calc(var(--rot, 0deg) + 22deg)) scale(1); opacity: 0.98; }
+        35% { transform: translate(calc(-50% + var(--x-mid, 0)), calc(-50% + var(--y-mid, 0))) rotate(calc(var(--rot, 0deg) + 200deg)) scale(0.88); opacity: 1; }
+        70% { transform: translate(calc(-50% + var(--x-spiral, 0)), calc(-50% + var(--y-spiral, 0))) rotate(calc(var(--rot, 0deg) + var(--spin, 540deg))) scale(0.72); opacity: 0.92; }
+        100% { transform: translate(calc(-50% + var(--x-center, 0)), calc(-50% + var(--y-center, 0))) rotate(calc(var(--rot, 0deg) + var(--spin, 540deg) + 90deg)) scale(0.5); opacity: 0.75; }
+      }
+      @keyframes bloomFade {
+        0% { opacity: 0.75; }
+        100% { opacity: 0; transform: translate(calc(-50% + var(--x-center, 0)), calc(-50% + var(--y-center, 0))) rotate(calc(var(--rot, 0deg) + var(--spin, 540deg) + 120deg)) scale(0.65); }
       }
 
       /* ============ STAGE 4: RED POSTER ============ */
@@ -339,6 +381,48 @@
         opacity: 0.5;
         z-index: 0;
       }
+      .stage-poster::after {
+        content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+        background-image:
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'><g opacity='0.28'><path d='M36 58 C28 48 18 50 16 62 C14 74 28 88 36 96 C44 88 58 74 56 62 C54 50 44 48 36 58 Z' fill='%23f4c95d'/><path d='M168 34 C160 24 150 26 148 38 C146 50 160 64 168 72 C176 64 190 50 188 38 C186 26 176 24 168 34 Z' fill='%23ff8fa3' transform='scale(0.7) translate(60 10)'/><text x='112' y='48' fill='%23f4c95d' font-size='18' font-family='serif'>✦</text><text x='24' y='168' fill='%23ff8fa3' font-size='14' font-family='serif'>✦</text><text x='188' y='148' fill='%23f4c95d' font-size='22' font-family='serif'>♥</text><ellipse cx='196' cy='52' rx='9' ry='12' fill='%23c9a558' opacity='0.6'/><ellipse cx='72' cy='196' rx='7' ry='10' fill='%232a1408' opacity='0.35'/><circle cx='128' cy='168' r='5' fill='%23f4c95d' opacity='0.5'/></g></svg>"),
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><g opacity='0.22'><text x='20' y='90' fill='%23ffd60a' font-size='16'>♥</text><text x='150' y='30' fill='%23ff8fa3' font-size='12'>✦</text><path d='M90 170 C82 160 72 162 70 174 C68 186 82 200 90 208 C98 200 112 186 110 174 C108 162 98 160 90 170 Z' fill='%23f4c95d' transform='scale(0.55)'/><ellipse cx='40' cy='40' rx='8' ry='11' fill='%23c9a558' opacity='0.55'/><ellipse cx='160' cy='120' rx='6' ry='9' fill='%232a1408' opacity='0.4'/></g></svg>");
+        background-size: 380px 380px, 300px 300px;
+        background-position: 0 0, 150px 120px;
+        opacity: 0.38;
+      }
+      .poster-deco {
+        position: fixed; inset: 0; pointer-events: none; z-index: 0;
+        overflow: hidden;
+      }
+      .deco-item {
+        position: absolute;
+        opacity: 0.12;
+        animation: decoDrift 22s ease-in-out infinite;
+      }
+      .deco-item svg { display: block; overflow: visible; width: 100%; height: 100%; }
+      @keyframes decoDrift {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
+        50% { transform: translate(4px, -6px) rotate(8deg); opacity: 0.16; }
+      }
+
+      /* leopard accent props — like buket / photos */
+      .leopard-accent {
+        position: absolute;
+        pointer-events: none;
+        z-index: 2;
+        filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
+        animation: accentFloat 6s ease-in-out infinite;
+      }
+      .leopard-accent svg { display: block; overflow: visible; }
+      .accent-hero-1 { top: 12%; left: 4%; width: 56px; animation-delay: 0s; }
+      .accent-hero-2 { bottom: 18%; right: 5%; width: 48px; animation-delay: -2s; }
+      .accent-letter { top: 8%; right: -8px; width: 64px; animation-delay: -1s; }
+      .accent-buket { bottom: -20px; left: -16px; width: 58px; animation-delay: -3s; }
+      .accent-finale { bottom: 12%; left: -24px; width: 72px; animation-delay: -1.5s; }
+      @keyframes accentFloat {
+        0%, 100% { transform: translateY(0) rotate(var(--acc-rot, 0deg)); }
+        50% { transform: translateY(-8px) rotate(calc(var(--acc-rot, 0deg) + 6deg)); }
+      }
 
       .poster-hero {
         position: relative; z-index: 1;
@@ -346,9 +430,13 @@
         width: 100%;
         display: flex; flex-direction: column;
         align-items: center; justify-content: center;
-        padding: 64px 24px 80px;
+        padding: 56px 0 80px;
         text-align: center;
         flex-shrink: 0;
+      }
+      .hero-head {
+        width: 100%;
+        padding: 0 24px;
       }
       .poster-hero .leopard-strip {
         position: absolute; left: 0; right: 0; top: 0; height: 14px;
@@ -359,12 +447,14 @@
       .leopard-bg {
         background-color: var(--red-0);
         background-image:
+          radial-gradient(ellipse at 50% 0%, rgba(244, 201, 93, 0.06), transparent 55%),
           radial-gradient(ellipse 18px 26px at 25% 40%, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 65%),
           radial-gradient(ellipse 14px 20px at 75% 70%, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 65%),
           radial-gradient(ellipse 20px 28px at 60% 25%, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 65%),
           radial-gradient(ellipse 12px 18px at 15% 80%, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 65%),
-          radial-gradient(ellipse 22px 30px at 90% 10%, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 65%);
-        background-size: 120px 120px;
+          radial-gradient(ellipse 22px 30px at 90% 10%, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 65%),
+          radial-gradient(ellipse 10px 14px at 45% 55%, rgba(201, 165, 88, 0.15) 0%, transparent 70%);
+        background-size: auto, 120px 120px, 120px 120px, 120px 120px, 120px 120px, 120px 120px, 180px 180px;
       }
 
       .poster-kicker {
@@ -414,54 +504,88 @@
         opacity: 0;
         transition: opacity 0.9s 0.3s ease;
       }
-      .scroll-hint {
-        position: absolute; bottom: 28px; left: 50%;
-        transform: translateX(-50%);
-        font-family: "Cinzel", serif;
-        font-size: 10px; letter-spacing: 0.5em;
-        text-transform: uppercase;
-        color: var(--gold-hot);
-        opacity: 0;
-        transition: opacity 0.9s 0.5s ease;
-      }
-      .scroll-hint::after {
-        content: ""; display: block;
-        width: 1px; height: 36px;
-        background: linear-gradient(180deg, var(--gold-hot), transparent);
-        margin: 10px auto 0;
-        animation: scrollPulse 2s ease-in-out infinite;
-      }
       .in.poster-hero .poster-kicker, .in.poster-hero .poster-title, .in.poster-hero .poster-subtitle,
-      .in.poster-hero .poster-heart, .in.poster-hero .scroll-hint { opacity: 1; transform: translateY(0); }
+      .in.poster-hero .poster-heart { opacity: 1; transform: translateY(0); }
 
-      /* photo collage */
+      /* canvas mood-board — full bleed */
       .photo-collage {
         position: relative;
-        margin: 56px auto 0;
-        width: min(720px, 92vw);
-        height: min(520px, 90vw);
-        opacity: 0; transform: scale(0.95);
+        margin: 44px 0 0;
+        width: 100%;
+        height: min(820px, 78vh);
+        padding: 40px 56px;
+        background:
+          linear-gradient(145deg, #e6dcc8 0%, #d4c8b0 45%, #c9bc9e 100%);
+        border-top: 2px solid rgba(255, 245, 225, 0.14);
+        border-bottom: 2px solid rgba(255, 245, 225, 0.14);
+        border-radius: 0;
+        box-shadow:
+          inset 0 0 60px rgba(74, 58, 42, 0.1),
+          inset 0 2px 0 rgba(255, 255, 255, 0.15),
+          0 24px 56px rgba(0, 0, 0, 0.42);
+        opacity: 0; transform: scale(0.98);
         transition: opacity 1s 0.3s ease, transform 1s 0.3s ease;
+      }
+      .photo-collage::before {
+        content: ""; position: absolute; inset: 0; pointer-events: none;
+        background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23c)' opacity='0.35'/></svg>");
+        background-size: 120px 120px;
+        opacity: 0.35; mix-blend-mode: multiply;
+        border-radius: 4px;
       }
       .in.poster-hero .photo-collage { opacity: 1; transform: scale(1); }
       .polaroid {
         position: absolute;
         background: #fffaf0;
-        padding: 12px 12px 48px;
-        box-shadow: 0 18px 38px rgba(0, 0, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.25);
+        padding: 12px 12px 44px;
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35), 0 3px 6px rgba(0, 0, 0, 0.2);
         cursor: pointer;
         transition: transform 0.4s ease, box-shadow 0.4s ease;
-        overflow: hidden;
+        overflow: visible;
       }
-      .polaroid:hover { transform: scale(1.05) translateY(-4px) rotate(0deg) !important; box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55), 0 6px 12px rgba(0, 0, 0, 0.3); z-index: 10; }
+      .polaroid .push-pin {
+        position: absolute;
+        top: -14px; left: 50%;
+        transform: translateX(-50%);
+        width: 14px; height: 14px;
+        background: radial-gradient(circle at 32% 28%, #e8c060, #b8860b 55%, #7a5a10 100%);
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+        z-index: 8;
+      }
+      .polaroid .push-pin::after {
+        content: ""; position: absolute;
+        top: 3px; left: 4px;
+        width: 3px; height: 3px;
+        background: rgba(255, 255, 255, 0.45);
+        border-radius: 50%;
+      }
+      .polaroid:hover { box-shadow: 0 20px 42px rgba(0, 0, 0, 0.5), 0 5px 10px rgba(0, 0, 0, 0.28); z-index: 10; }
+      .p1:hover { transform: translateX(-50%) scale(1.04) translateY(-4px) rotate(-1.5deg) !important; }
+      .p2:hover { transform: rotate(-7deg) scale(1.04) translateY(-4px) !important; }
+      .p3:hover { transform: rotate(6deg) scale(1.04) translateY(-4px) !important; }
+      .p4:hover { transform: rotate(-5deg) scale(1.04) translateY(-4px) !important; }
       .polaroid .photo {
         width: 100%; aspect-ratio: 1;
         background: linear-gradient(135deg, var(--rose-soft), #c9184a);
         position: relative; overflow: hidden;
         display: grid; place-items: center;
       }
-      .polaroid .photo img {
-        width: 100%; height: 100%; object-fit: cover; display: block;
+      .polaroid .photo img[src] {
+        width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;
+      }
+      .polaroid .photo img:not([src]), .polaroid .photo img.broken {
+        display: none;
+      }
+      .polaroid .photo::after {
+        content: "✦"; position: absolute; inset: 0;
+        display: grid; place-items: center;
+        font-size: 28px; color: rgba(255,255,255,0.25);
+        background: linear-gradient(145deg, #e0d5c4, #d1c4ad);
+        z-index: 0;
+      }
+      .polaroid .photo:has(img[src]:not(.broken))::after {
+        display: none;
       }
       .polaroid .photo .ph {
         color: rgba(255, 255, 255, 0.9);
@@ -478,10 +602,49 @@
         letter-spacing: 0.3em; text-transform: uppercase;
         color: var(--ink-soft);
       }
-      .p1 { top: 0; left: 2%; width: 54%; transform: rotate(-2.5deg); z-index: 3; }
-      .p2 { top: 3%; right: 2%; width: 40%; transform: rotate(4deg); z-index: 2; }
-      .p3 { bottom: 4%; left: 0; width: 42%; transform: rotate(1.5deg); z-index: 4; }
-      .p4 { bottom: 0; right: 0; width: 48%; transform: rotate(-3.5deg); z-index: 5; }
+      .p1 { top: 28%; left: 50%; width: 32%; transform: translateX(-50%) rotate(-1.5deg); z-index: 5; }
+      .p2 { top: 6%; left: 12%; width: 22%; transform: rotate(-8deg); z-index: 3; }
+      .p3 { top: 6%; right: 12%; width: 22%; transform: rotate(7deg); z-index: 2; }
+      .p4 { bottom: 8%; right: 14%; width: 24%; transform: rotate(-5deg); z-index: 4; }
+
+      /* favorite person → points at p1 */
+      .fav-pointer {
+        position: absolute;
+        top: 8%; left: 50%;
+        transform: translateX(-50%);
+        z-index: 9;
+        display: flex; flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        pointer-events: none;
+      }
+      .fav-label {
+        background: linear-gradient(135deg, var(--gold-hot), #d4a017);
+        padding: 6px 18px;
+        border-radius: 20px;
+        font-family: "Cinzel", serif;
+        font-size: 10px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--red-0);
+        box-shadow: 0 4px 14px rgba(244, 201, 93, 0.45);
+        white-space: nowrap;
+        display: flex; align-items: center;
+        gap: 8px;
+      }
+      .fav-label .star { font-size: 14px; line-height: 1; }
+      .golden-arrow {
+        animation: arrowBob 2.4s ease-in-out infinite;
+      }
+      .golden-arrow svg {
+        width: 48px; height: 72px;
+        display: block; overflow: visible;
+        filter: drop-shadow(0 2px 6px rgba(244, 201, 93, 0.35));
+      }
+      @keyframes arrowBob {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(5px); }
+      }
 
       /* section wrapper */
       .poster-section {
@@ -530,14 +693,32 @@
       .in.poster-section .section-title, .in.poster-section .section-tag { opacity: 1; transform: translateY(0); }
 
       /* section 1: text + big heart */
-      .duo { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
+      .duo { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; position: relative; overflow: visible; }
+      .love-paper {
+        position: relative;
+        background: linear-gradient(135deg, rgba(60, 48, 36, 0.45), rgba(45, 38, 30, 0.5));
+        border: 1px solid rgba(255, 245, 225, 0.08);
+        border-radius: 6px;
+        padding: 40px 36px;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(3px);
+        opacity: 0; transform: translateX(-30px);
+        transition: opacity 0.9s 0.2s ease, transform 0.9s 0.2s ease;
+      }
+      .love-paper::before {
+        content: ""; position: absolute; inset: 0; pointer-events: none;
+        background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23g)' opacity='0.5'/></svg>");
+        background-size: 100px 100px;
+        opacity: 0.6; mix-blend-mode: overlay;
+        border-radius: 6px;
+      }
+      .in.poster-section .love-paper { opacity: 1; transform: translateX(0); }
       .love-text {
         font-family: "Cormorant Garamond", serif;
         font-size: clamp(18px, 1.6vw, 21px);
         line-height: 1.85;
         color: var(--cream-warm);
-        opacity: 0; transform: translateX(-30px);
-        transition: opacity 0.9s 0.2s ease, transform 0.9s 0.2s ease;
+        position: relative; z-index: 1;
       }
       .love-text p + p { margin-top: 18px; }
       .love-text .drop {
@@ -554,52 +735,36 @@
         font-size: 36px; color: var(--rose-soft);
         text-align: right;
       }
-      .in.poster-section .love-text { opacity: 1; transform: translateX(0); }
 
-      .big-heart {
+      /* bouquet wrapping paper + ribbon */
+      .bouquet-paper {
         position: relative;
-        width: min(420px, 92%);
-        margin-left: auto;
-        margin-right: auto;
-        opacity: 0; transform: translateX(30px) scale(0.92);
+        padding: 20px 20px 28px;
+        overflow: visible;
+        border-radius: 4px;
+        background: linear-gradient(145deg, rgba(80, 65, 55, 0.35), rgba(55, 45, 38, 0.4));
+        border: 1px solid rgba(255, 245, 225, 0.06);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        opacity: 0; transform: translateX(30px) scale(0.95);
         transition: opacity 1s 0.3s ease, transform 1s 0.3s ease;
-        filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.45));
-        animation: heartBeatSoft 2.6s ease-in-out infinite;
-        animation-delay: 1.4s;
       }
-      .in.poster-section .big-heart { opacity: 1; transform: translateX(0) scale(1); }
-      .big-heart svg { width: 100%; height: auto; display: block; overflow: visible; }
-      @keyframes heartBeatSoft {
-        0%, 100% { transform: scale(1); }
-        14% { transform: scale(1.04); }
-        28% { transform: scale(1); }
-        42% { transform: scale(1.025); }
+      .in.poster-section .bouquet-paper { opacity: 1; transform: translateX(0) scale(1); }
+      .bouquet-paper .buket-wrap {
+        opacity: 1; transform: none; transition: none;
+        margin: 0 auto;
       }
+      .in.poster-section .bouquet-paper .buket-wrap { opacity: 1; transform: none; }
+      .ribbon-bow {
+        position: absolute;
+        top: -4px; left: 50%;
+        transform: translateX(-50%);
+        z-index: 5;
+        width: 80px; height: 40px;
+        pointer-events: none;
+      }
+      .ribbon-bow svg { width: 100%; height: 100%; display: block; overflow: visible; }
 
       /* section 2: cats + sparkles */
-      .cats-deco { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 40px; }
-      .cats-stage {
-        position: relative;
-        height: 320px;
-        opacity: 0; transform: translateX(-30px);
-        transition: opacity 0.9s 0.2s ease, transform 0.9s 0.2s ease;
-        filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
-        animation: glowPulse 4s ease-in-out infinite;
-      }
-      .in.poster-section .cats-stage { opacity: 1; transform: translateX(0); }
-      .cat {
-        position: absolute; bottom: 0;
-        width: 220px; height: 220px;
-        object-fit: cover;
-        border-radius: 8px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-        clip-path: ellipse(44% 46% at 50% 52%);
-      }
-      .cat.black { left: 0; }
-      .cat.white { right: 0; }
-      .cat.white { clip-path: ellipse(44% 46% at 50% 52%); }
-      @keyframes glowPulse { 0%, 100% { filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35)); } 50% { filter: drop-shadow(0 18px 34px rgba(244, 201, 93, 0.25)); } }
-
       .buket-wrap {
         position: relative;
         width: min(520px, 95%);
@@ -618,38 +783,180 @@
         border-radius: 4px;
       }
 
-      /* finale */
-      .poster-finale {
+      /* finale 2-col: cats left + love arch right */
+      .finale-grid {
+        display: grid;
+        grid-template-columns: 1.05fr 1fr;
+        gap: 48px;
+        align-items: stretch;
+        margin-top: 40px;
+        min-height: min(560px, 72vh);
+      }
+      .cat-large-wrap {
+        position: relative;
+        width: 100%;
+        padding: 20px 16px 28px;
+        opacity: 0; transform: translateX(-24px);
+        transition: opacity 0.9s 0.2s ease, transform 0.9s 0.2s ease;
+        background:
+          radial-gradient(ellipse at 25% 40%, rgba(244, 201, 93, 0.14), transparent 55%),
+          radial-gradient(ellipse at 75% 70%, rgba(185, 28, 58, 0.18), transparent 50%),
+          linear-gradient(180deg, rgba(42, 4, 8, 0.15), transparent);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .cat-large-wrap::before {
+        content: ""; position: absolute; inset: 0; pointer-events: none;
+        background-image:
+          radial-gradient(circle at 20% 30%, rgba(244, 201, 93, 0.25) 0, transparent 8px),
+          radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0, transparent 6px),
+          radial-gradient(circle at 60% 80%, rgba(244, 201, 93, 0.2) 0, transparent 7px),
+          radial-gradient(circle at 35% 65%, rgba(255, 143, 163, 0.15) 0, transparent 5px);
+        opacity: 0.7;
+      }
+      .in.poster-section .cat-large-wrap { opacity: 1; transform: translateX(0); }
+      .cat-large {
         position: relative; z-index: 1;
         width: 100%;
-        padding: 80px 24px 100px;
+        height: auto;
+        display: block;
+        border-radius: 0;
+        box-shadow: none;
+        filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.35));
+        animation: catNuzzle 5s ease-in-out infinite;
+        -webkit-mask-image: radial-gradient(ellipse 92% 88% at 50% 48%, #000 65%, transparent 100%);
+        mask-image: radial-gradient(ellipse 92% 88% at 50% 48%, #000 65%, transparent 100%);
+      }
+
+      /* "Us" heading — above cat image */
+      .us-heading {
         text-align: center;
-        background:
-          linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.4)),
-          var(--leopard-bg, transparent);
-        background-size: auto, 200px 200px;
-        flex-shrink: 0;
-        box-sizing: border-box;
+        margin-bottom: 4px;
       }
-      .poster-finale h2 {
-        font-family: "Playfair Display", serif;
-        font-weight: 700;
-        font-size: clamp(28px, 5vw, 48px);
-        color: var(--cream-warm);
-        line-height: 1.3;
-        max-width: 700px;
-        margin: 0 auto 20px;
-        opacity: 0; transform: translateY(20px);
-        transition: opacity 0.9s ease, transform 0.9s ease;
+      .us-text-svg {
+        width: clamp(140px, 36vw, 240px);
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        animation: archBreathe 5s ease-in-out infinite;
       }
-      .poster-finale .signature {
+      .us-text-svg .us-shadow {
         font-family: "Great Vibes", cursive;
-        font-size: 56px;
-        color: var(--gold-hot);
-        opacity: 0; transform: translateY(20px);
-        transition: opacity 0.9s 0.2s ease, transform 0.9s 0.2s ease;
+        font-size: 72px;
+        fill: rgba(42, 4, 8, 0.5);
+        letter-spacing: 0.08em;
       }
-      .in.poster-finale h2, .in.poster-finale .signature { opacity: 1; transform: translateY(0); }
+      .us-text-svg .us-glow {
+        font-family: "Great Vibes", cursive;
+        font-size: 72px;
+        fill: none;
+        stroke: rgba(255, 214, 10, 0.32);
+        stroke-width: 2.5;
+        letter-spacing: 0.08em;
+      }
+      .us-text-svg .us-main {
+        font-family: "Great Vibes", cursive;
+        font-size: 72px;
+        fill: url(#usTextGrad);
+        letter-spacing: 0.08em;
+        filter: url(#usTextGlow);
+      }
+      @keyframes catNuzzle {
+        0%, 100% { transform: translateX(0) rotate(0deg); }
+        20% { transform: translateX(-8px) rotate(-1.5deg); }
+        45% { transform: translateX(6px) rotate(1deg); }
+        70% { transform: translateX(-4px) rotate(-0.6deg); }
+      }
+
+      .love-arch-panel {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: min(520px, 68vh);
+        padding: 0;
+        background: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        opacity: 0; transform: translateX(20px);
+        transition: opacity 1.1s 0.3s ease, transform 1.1s 0.3s ease;
+        overflow: visible;
+      }
+      .in.poster-section .love-arch-panel { opacity: 1; transform: translateX(0); }
+      .love-arch-penguin {
+        position: absolute;
+        top: -22%;
+        right: 2%;
+        width: clamp(110px, 20vw, 175px);
+        height: auto;
+        z-index: 3;
+        filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.4));
+        animation: penguinBob 4.5s ease-in-out infinite;
+        pointer-events: none;
+      }
+      @keyframes penguinBob {
+        0%, 100% { transform: translateY(0) rotate(-4deg); }
+        50% { transform: translateY(-8px) rotate(3deg); }
+      }
+      .love-arch-svg {
+        width: 100%;
+        max-width: none;
+        height: auto;
+        min-height: clamp(200px, 28vw, 320px);
+        position: relative;
+        z-index: 1;
+        animation: archBreathe 5s ease-in-out infinite;
+      }
+      .love-arch-svg .arch-shadow {
+        font-family: "Great Vibes", cursive;
+        font-size: clamp(56px, 7.5vw, 88px);
+        fill: rgba(42, 4, 8, 0.5);
+        letter-spacing: 0.1em;
+      }
+      .love-arch-svg .arch-outline {
+        font-family: "Great Vibes", cursive;
+        font-size: clamp(56px, 7.5vw, 88px);
+        fill: none;
+        stroke: #8a6a2c;
+        stroke-width: 2.5;
+        letter-spacing: 0.1em;
+      }
+      .love-arch-svg .arch-text-path {
+        font-family: "Great Vibes", cursive;
+        font-size: clamp(56px, 7.5vw, 88px);
+        fill: url(#archTextGrad);
+        letter-spacing: 0.1em;
+        filter: url(#archTextGlow);
+      }
+      .love-arch-svg .arch-glow {
+        font-family: "Great Vibes", cursive;
+        font-size: clamp(56px, 7.5vw, 88px);
+        fill: none;
+        stroke: rgba(255, 214, 10, 0.32);
+        stroke-width: 3;
+        letter-spacing: 0.1em;
+      }
+      @keyframes archBreathe {
+        0%, 100% { filter: drop-shadow(0 4px 24px rgba(244, 201, 93, 0.22)); transform: scale(1); }
+        50% { filter: drop-shadow(0 8px 36px rgba(255, 143, 163, 0.3)); transform: scale(1.012); }
+      }
+      .love-arch-panel .arch-leopard-heart {
+        position: absolute;
+        bottom: 18%;
+        left: 50%;
+        margin-left: -32px;
+        width: 64px;
+        z-index: 2;
+        opacity: 0.85;
+        animation: heartPulseSoft 3.5s ease-in-out infinite;
+        filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
+      }
+      @keyframes heartPulseSoft {
+        0%, 100% { transform: scale(1); opacity: 0.95; }
+        50% { transform: scale(1.07); opacity: 1; }
+      }
 
       /* restart button */
       .restart {
@@ -690,21 +997,109 @@
       @keyframes floatY { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-12px) rotate(8deg); } }
 
       /* ============ RESPONSIVE ============ */
-      @media (max-width: 760px) {
-        .duo, .cats-deco { grid-template-columns: 1fr; gap: 36px; }
-        .duo { grid-template-columns: 1.2fr 0.8fr; }
-        .big-heart { margin: 0 auto; max-width: 300px; }
-        .buket-wrap { margin: 0 auto; max-width: 300px; }
-        .cats-stage { height: 240px; }
-        .cat { width: 160px; height: 160px; }
-        .poster-section { padding: 70px 18px; }
-        .p1 { width: 52%; }
-        .p2 { width: 38%; }
-        .p3 { width: 40%; }
-        .p4 { width: 46%; }
-        .photo-collage { height: 340px; }
-        .buket-img { border-radius: 3px; }
+      /* tablet */
+      @media (max-width: 900px) {
+        .poster-hero { padding: 48px 20px 64px; }
+        .poster-title { font-size: clamp(40px, 9vw, 72px); }
+        .photo-collage { height: min(680px, 72vh); padding: 32px 36px; }
+        .duo { gap: 40px; }
+        .poster-section { padding: 80px 20px; }
       }
+
+      /* phone */
+      @media (max-width: 600px) {
+        /* --- STAGE 1: PIN --- */
+        .stage-pin { padding: 24px 16px; gap: 20px; }
+        .pin-top { margin-top: 12px; }
+        .pin-top .kicker { font-size: 9px; letter-spacing: 0.4em; }
+        .pin-top h1 { font-size: clamp(22px, 6vw, 28px); }
+        .pin-sub { font-size: 15px; }
+        .key-wrap { width: 140px; height: 140px; }
+        .pin-pad { gap: 10px; max-width: 280px; }
+        .pin-key { font-size: 22px; }
+        .float-flower { width: 22px; height: 22px; }
+        .float-flower:nth-child(3) { width: 28px; height: 28px; }
+        .float-flower:nth-child(5) { width: 20px; height: 20px; }
+
+        /* --- STAGE 2: ENVELOPE --- */
+        .stage-letter { gap: 24px; }
+        .envelope { width: min(340px, 88vw); }
+        .envelope .env-letter { padding: 16px 18px; }
+        .envelope .env-letter .line { font-size: 12px; }
+        .envelope .env-letter .line.big { font-size: 18px; }
+        .envelope .wax { width: 52px; height: 52px; font-size: 18px; }
+        .open-hint { font-size: 12px; letter-spacing: 0.15em; }
+
+        /* --- STAGE 4: HERO --- */
+        .poster-hero { padding: 36px 16px 56px; min-height: 100svh; }
+        .poster-kicker { font-size: 9px; letter-spacing: 0.4em; margin-bottom: 10px; }
+        .poster-title { font-size: clamp(32px, 11vw, 52px); margin-bottom: 4px; }
+        .poster-subtitle { font-size: 15px; margin-top: 4px; }
+        .poster-heart { font-size: 22px; margin-top: 12px; }
+
+        /* photo collage */
+        .photo-collage {
+          height: min(480px, 65vh);
+          padding: 20px 14px 36px;
+          margin-top: 28px;
+        }
+        .p1 { width: 46%; top: 26%; }
+        .p2 { width: 30%; top: 2%; left: 2%; }
+        .p3 { width: 30%; top: 2%; right: 2%; }
+        .p4 { width: 34%; bottom: 4%; right: 4%; }
+        .polaroid { padding: 8px 8px 34px; }
+        .polaroid .caption { font-size: 8px; bottom: 6px; letter-spacing: 0.2em; }
+        .push-pin { width: 12px; height: 12px; top: -11px; }
+        .fav-pointer { top: 3%; }
+        .fav-label { font-size: 8px; padding: 4px 12px; }
+        .golden-arrow svg { width: 32px; height: 50px; }
+
+        /* --- STAGE 4: SECTION 1 (TEXT + BOUQUET) --- */
+        .poster-section { padding: 52px 16px; }
+        .gold-divider { margin-bottom: 20px; }
+        .section-title { font-size: clamp(30px, 9vw, 44px); margin-bottom: 4px; }
+        .section-tag { font-size: 9px; margin-bottom: 28px; }
+        .duo { grid-template-columns: 1fr; gap: 28px; }
+        .love-paper { padding: 24px 20px; }
+        .love-text { font-size: clamp(16px, 4.2vw, 19px); line-height: 1.75; }
+        .love-text .drop { font-size: 2.6em; margin: 4px 8px 0 0; }
+        .love-text .sign { font-size: 28px; margin-top: 18px; }
+        .bouquet-paper { padding: 12px; }
+        .buket-wrap { max-width: 260px; margin: 0 auto; }
+        .buket-img { border-radius: 2px; }
+
+        /* --- STAGE 4: FINALE (CATS + LOVE ARCH) --- */
+        .finale-grid { grid-template-columns: 1fr; gap: 28px; min-height: auto; }
+        .us-heading { margin-bottom: 2px; }
+        .us-text-svg { width: clamp(100px, 30vw, 160px); }
+        .cat-large-wrap { padding: 12px 10px 18px; }
+        .love-arch-panel {
+          min-height: 240px;
+          padding: 28px 16px;
+        }
+        .love-arch-svg { min-height: 140px; }
+        .love-arch-penguin { width: 70px; top: -14%; right: 4%; }
+        .arch-leopard-heart { width: 48px; margin-left: -24px; bottom: 14%; }
+
+        /* --- RESTART BUTTON --- */
+        .restart { top: 12px; right: 12px; padding: 8px 12px; font-size: 9px; }
+      }
+
+      /* very small phones */
+      @media (max-width: 380px) {
+        .pin-top h1 { font-size: 20px; }
+        .key-wrap { width: 110px; height: 110px; }
+        .pin-pad { gap: 8px; max-width: 240px; }
+        .pin-key { font-size: 20px; }
+        .poster-title { font-size: 28px; }
+        .photo-collage { height: min(400px, 60vh); padding: 16px 10px 30px; }
+        .p1 { width: 48%; }
+        .p2, .p3 { width: 32%; }
+        .p4 { width: 36%; }
+        .love-paper { padding: 18px 14px; }
+        .love-text .drop { font-size: 2.2em; }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
       }
@@ -746,46 +1141,72 @@
 
     <!-- ================== STAGE 1: PIN ================== -->
     <section class="stage stage-pin active" id="stagePin" aria-label="Unesi PIN">
-      <div class="pin-top">
+      <!-- floating flower bg -->
+      <div class="float-flowers" aria-hidden="true">
+        <div class="float-flower"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 2 C22 9 25 18 20 20 C15 22 9 25 2 20 C9 18 18 15 20 20 C22 25 25 31 20 38 C18 31 15 22 20 20 C25 18 31 15 38 20 C31 22 22 25 20 20 C18 15 15 9 20 2 Z" fill="#ffffff" opacity="0.9"/><circle cx="20" cy="20" r="3" fill="#f0ebe3"/></svg></div>
+        <div class="float-flower"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 2 C22 9 25 18 20 20 C15 22 9 25 2 20 C9 18 18 15 20 20 C22 25 25 31 20 38 C18 31 15 22 20 20 C25 18 31 15 38 20 C31 22 22 25 20 20 C18 15 15 9 20 2 Z" fill="#ffffff" opacity="0.85"/><circle cx="20" cy="20" r="3" fill="#ebe6de"/></svg></div>
+        <div class="float-flower"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 2 C22 9 25 18 20 20 C15 22 9 25 2 20 C9 18 18 15 20 20 C22 25 25 31 20 38 C18 31 15 22 20 20 C25 18 31 15 38 20 C31 22 22 25 20 20 C18 15 15 9 20 2 Z" fill="#ffffff" opacity="0.88"/><circle cx="20" cy="20" r="3" fill="#f5f0e8"/></svg></div>
+        <div class="float-flower"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 2 C22 9 25 18 20 20 C15 22 9 25 2 20 C9 18 18 15 20 20 C22 25 25 31 20 38 C18 31 15 22 20 20 C25 18 31 15 38 20 C31 22 22 25 20 20 C18 15 15 9 20 2 Z" fill="#ffffff" opacity="0.82"/><circle cx="20" cy="20" r="3" fill="#ede8e0"/></svg></div>
+        <div class="float-flower"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 2 C22 9 25 18 20 20 C15 22 9 25 2 20 C9 18 18 15 20 20 C22 25 25 31 20 38 C18 31 15 22 20 20 C25 18 31 15 38 20 C31 22 22 25 20 20 C18 15 15 9 20 2 Z" fill="#ffffff" opacity="0.9"/><circle cx="20" cy="20" r="3" fill="#f0ebe3"/></svg></div>
+        <div class="float-flower"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 2 C22 9 25 18 20 20 C15 22 9 25 2 20 C9 18 18 15 20 20 C22 25 25 31 20 38 C18 31 15 22 20 20 C25 18 31 15 38 20 C31 22 22 25 20 20 C18 15 15 9 20 2 Z" fill="#ffffff" opacity="0.86"/><circle cx="20" cy="20" r="3" fill="#ebe6de"/></svg></div>
+        <div class="float-flower"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 2 C22 9 25 18 20 20 C15 22 9 25 2 20 C9 18 18 15 20 20 C22 25 25 31 20 38 C18 31 15 22 20 20 C25 18 31 15 38 20 C31 22 22 25 20 20 C18 15 15 9 20 2 Z" fill="#ffffff" opacity="0.84"/><circle cx="20" cy="20" r="3" fill="#f5f0e8"/></svg></div>
+        <div class="float-flower"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 2 C22 9 25 18 20 20 C15 22 9 25 2 20 C9 18 18 15 20 20 C22 25 25 31 20 38 C18 31 15 22 20 20 C25 18 31 15 38 20 C31 22 22 25 20 20 C18 15 15 9 20 2 Z" fill="#ffffff" opacity="0.88"/><circle cx="20" cy="20" r="3" fill="#f0ebe3"/></svg></div>
+      </div>
+      <div class="pin-top pin-ui">
         <div class="kicker">malo tajno</div>
         <h1>Unesi <span>pin</span> da otvoriš</h1>
       </div>
 
-      <div class="key-wrap" aria-hidden="true">
+      <div class="key-wrap pin-ui" aria-hidden="true">
         <svg class="key-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="keyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#e8c876" />
-              <stop offset="50%" stop-color="#c9a558" />
+            <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff6b8a" />
+              <stop offset="50%" stop-color="#c9184a" />
+              <stop offset="100%" stop-color="#8b0a1f" />
+            </linearGradient>
+            <linearGradient id="lockGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#dbb76e" />
               <stop offset="100%" stop-color="#8a6a2c" />
             </linearGradient>
           </defs>
-          <!-- key bow (head) -->
-          <circle class="key-body" cx="65" cy="100" r="38" />
-          <circle cx="65" cy="100" r="20" fill="#fdfaf4" />
-          <circle class="key-detail" cx="65" cy="100" r="20" />
-          <!-- key shaft -->
-          <rect class="key-body" x="100" y="92" width="80" height="16" rx="2" />
-          <!-- key teeth -->
-          <rect class="key-body" x="148" y="108" width="10" height="18" rx="2" />
-          <rect class="key-body" x="166" y="108" width="10" height="22" rx="2" />
-          <!-- highlight -->
-          <ellipse cx="55" cy="85" rx="12" ry="6" fill="#fff" opacity="0.4" />
+          <!-- Heart shape -->
+          <path d="M100 180 C 40 140 15 90 15 60 C 15 30 40 15 65 15 C 82 15 93 25 100 38 C 107 25 118 15 135 15 C 160 15 185 30 185 60 C 185 90 160 140 100 180 Z"
+            fill="url(#heartGrad)" stroke="#6a0510" stroke-width="2" stroke-linejoin="round" />
+          <!-- Heart inner glow -->
+          <path d="M100 165 C 52 130 32 88 32 62 C 32 40 52 28 70 28 C 84 28 92 36 100 50 C 108 36 116 28 130 28 C 148 28 168 40 168 62 C 168 88 148 130 100 165 Z"
+            fill="none" stroke="#ffd1dc" stroke-width="1.5" opacity="0.45" />
+          <!-- Padlock -->
+          <rect x="76" y="68" width="48" height="42" rx="6" fill="url(#lockGrad)" stroke="#6a4e1e" stroke-width="1.5" />
+          <path d="M82 68 V56 A18 18 0 0 1 118 56 V68" fill="none" stroke="#6a4e1e" stroke-width="2.5" stroke-linecap="round" />
+          <circle cx="100" cy="85" r="7" fill="#2a0408" />
+          <rect x="97" y="85" width="6" height="12" rx="1.5" fill="#2a0408" />
+          <!-- Key crossing the heart -->
+          <g stroke="#c9a558" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="125" y1="108" x2="162" y2="85" stroke-width="3.5" />
+            <circle cx="162" cy="85" r="12" fill="none" stroke-width="3" />
+            <line x1="160" y1="82" x2="165" y2="77" stroke-width="2.5" />
+            <line x1="162" y1="85" x2="168" y2="80" stroke-width="2.5" />
+            <line x1="125" y1="108" x2="122" y2="116" stroke-width="3" />
+            <line x1="132" y1="114" x2="129" y2="122" stroke-width="3" />
+          </g>
+          <!-- Reflected highlight -->
+          <ellipse cx="86" cy="73" rx="10" ry="4" fill="#fff" opacity="0.35" transform="rotate(-15 86 73)" />
         </svg>
       </div>
 
-      <div class="pin-sub">četiri cifre, samo naše</div>
+      <div class="pin-sub pin-ui">četiri cifre, samo naše</div>
 
-      <div class="pin-dots" id="pinDots" aria-live="polite">
+      <div class="pin-dots pin-ui" id="pinDots" aria-live="polite">
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
       </div>
 
-      <div class="pin-error" id="pinError" role="alert"></div>
+      <div class="pin-error pin-ui" id="pinError" role="alert"></div>
 
-      <div class="pin-pad" id="pinPad">
+      <div class="pin-pad pin-ui" id="pinPad">
         <button class="pin-key" data-n="1">1</button>
         <button class="pin-key" data-n="2">2</button>
         <button class="pin-key" data-n="3">3</button>
@@ -825,44 +1246,71 @@
 
     <!-- ================== STAGE 4: RED POSTER ================== -->
     <section class="stage stage-poster" id="stagePoster">
+      <div class="poster-deco" id="posterDeco" aria-hidden="true"></div>
       <!-- HERO -->
       <div class="poster-hero leopard-bg" data-in>
-        <div class="poster-kicker">dve godine · jedna ljubav</div>
-        <h1 class="poster-title">
-          <span class="script">za tebe,</span>
-          zauvek
-        </h1>
-        <div class="poster-subtitle">i sve što dolazi posle</div>
-        <div class="poster-heart">❤</div>
+        <div class="leopard-accent accent-hero-1" style="--acc-rot:-8deg" aria-hidden="true">
+          <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M30 54 C14 42 6 30 6 20 C6 10 14 4 22 4 C26 4 28 8 30 14 C32 8 34 4 38 4 C46 4 54 10 54 20 C54 30 46 42 30 54Z" fill="url(#leopard)" stroke="#f4c95d" stroke-width="1.2"/></svg>
+        </div>
+        <div class="leopard-accent accent-hero-2" style="--acc-rot:12deg" aria-hidden="true">
+          <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><text x="8" y="34" fill="#f4c95d" font-size="28" font-family="serif">✦</text></svg>
+        </div>
+        <div class="hero-head">
+          <div class="poster-kicker">dve godine · jedna ljubav</div>
+          <h1 class="poster-title">
+            <span class="script">za tebe,</span>
+            zauvek
+          </h1>
+          <div class="poster-subtitle">i sve što dolazi posle</div>
+          <div class="poster-heart">❤</div>
+        </div>
 
         <div class="photo-collage">
+          <div class="fav-pointer">
+            <div class="fav-label"><span class="star">✦</span> favorite person <span class="star">✦</span></div>
+            <div class="golden-arrow">
+              <svg viewBox="0 0 48 72" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="arrowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#f4c95d" />
+                    <stop offset="100%" stop-color="#d4a017" />
+                  </linearGradient>
+                </defs>
+                <path d="M24 4 Q 26 28 24 58" fill="none" stroke="url(#arrowGrad)" stroke-width="2.5" stroke-linecap="round" />
+                <path d="M24 58 L 16 46 M24 58 L 32 46" fill="none" stroke="url(#arrowGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
           <div class="polaroid p1" data-photo="1">
+            <span class="push-pin" aria-hidden="true"></span>
             <div class="photo">
-              <div class="ph">tvoja slika ❤<br /><small>klikni da dodaš</small></div>
+              <img src="photos/her.jpeg" alt="Ivona" loading="lazy" />
             </div>
             <div class="caption">ti</div>
           </div>
           <div class="polaroid p2" data-photo="2">
+            <span class="push-pin" aria-hidden="true"></span>
             <div class="photo">
-              <div class="ph">naš trenutak<br /><small>klikni da dodaš</small></div>
+              <img src="photos/mek.jpeg" alt="mi" loading="lazy" />
             </div>
             <div class="caption">mi</div>
           </div>
           <div class="polaroid p3" data-photo="3">
+            <span class="push-pin" aria-hidden="true"></span>
             <div class="photo">
-              <div class="ph">mali zauvek<br /><small>klikni da dodaš</small></div>
+              <img src="photos/zenba.jpeg" alt="zajedno" loading="lazy" />
             </div>
             <div class="caption">zajedno</div>
           </div>
           <div class="polaroid p4" data-photo="4">
+            <span class="push-pin" aria-hidden="true"></span>
             <div class="photo">
-              <div class="ph">osmeh ❤<br /><small>klikni da dodaš</small></div>
+              <img src="photos/smile.jpeg" alt="osmeh" loading="lazy" />
             </div>
             <div class="caption">✦</div>
           </div>
         </div>
 
-        <div class="scroll-hint">skroluj dole</div>
       </div>
 
       <!-- SECTION 1: TEXT + BOUQUET -->
@@ -872,73 +1320,126 @@
         <div class="section-tag">— od srca —</div>
 
         <div class="duo">
-          <div class="love-text">
-            <p>
-              <span class="drop">I</span>vona, pre dve godine rekao sam ti „volim te"
-              prvi put — i od tada ni jedan dan nije prošao a da to ne osetim
-              iznova. Ti si mi postala najlepša navika, najsigurnije mesto, i
-              razlog zašto ustajem sa osmehom.
-            </p>
-            <p>
-              Sa tobom sam naučio da ljubav nije velika reč — ljubav je kad
-              te čekam sa večerom, kad te pogledam i zaboravim šta sam hteo da
-              kažem, kad se smeješ u tri ujutru i ja shvatam da imam sve.
-            </p>
-            <p>
-              Biraš me svaki dan. Hvala ti. Ja biram tebe — danas, sutra,
-              i u svakoj verziji nas koju budemo pisali zajedno.
-            </p>
-            <p>
-              Srećan nam drugi rođendan ljubavi. Jedva čekam sve one koji
-              dolaze posle — sa tobom, jedan za drugim.
-            </p>
-            <div class="sign">voli te tvoj Nikola ❤</div>
+          <div class="leopard-accent accent-letter" style="--acc-rot:-14deg" aria-hidden="true">
+            <svg viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg"><path d="M35 62 C16 48 8 32 8 20 C8 8 18 2 28 2 C32 2 35 8 35 16 C35 8 38 2 42 2 C52 2 62 8 62 20 C62 32 54 48 35 62Z" fill="url(#leopard)" stroke="#f4c95d" stroke-width="1.5"/></svg>
+          </div>
+          <div class="love-paper">
+            <div class="love-text">
+              <p>
+                <span class="drop">I</span>vona, pre dve godine rekao sam ti „volim te"
+                prvi put — i od tada ni jedan dan nije prošao a da to ne osetim
+                iznova. Ti si mi postala najlepša navika, najsigurnije mesto, i
+                razlog zašto ustajem sa osmehom.
+              </p>
+              <p>
+                Sa tobom sam naučio da ljubav nije velika reč — ljubav je kad
+                te čekam sa večerom, kad te pogledam i zaboravim šta sam hteo da
+                kažem, kad se smeješ u tri ujutru i ja shvatam da imam sve.
+              </p>
+              <p>
+                Biraš me svaki dan. Hvala ti. Ja biram tebe — danas, sutra,
+                i u svakoj verziji nas koju budemo pisali zajedno.
+              </p>
+              <p>
+                Srećan nam drugi rođendan ljubavi. Jedva čekam sve one koji
+                dolaze posle — sa tobom, jedan za drugim.
+              </p>
+              <div class="sign">voli te tvoj Nikola ❤</div>
+            </div>
           </div>
 
-          <div class="buket-wrap">
-            <img src="beli-buket.png" alt="Buket" class="buket-img" loading="lazy" />
+          <div class="bouquet-paper">
+            <div class="leopard-accent accent-buket" style="--acc-rot:10deg" aria-hidden="true">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M30 52 C16 40 8 28 8 18 C8 8 16 4 24 4 C28 4 30 10 30 16 C30 10 32 4 36 4 C44 4 52 8 52 18 C52 28 44 40 30 52Z" fill="url(#leopard)" stroke="#f4c95d" stroke-width="1.2"/></svg>
+            </div>
+            <div class="ribbon-bow">
+              <svg viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#f4c95d" />
+                    <stop offset="50%" stop-color="#ffd60a" />
+                    <stop offset="100%" stop-color="#d4a017" />
+                  </linearGradient>
+                </defs>
+                <path d="M40 38 Q 20 20 5 8 Q 20 14 40 30 Q 60 14 75 8 Q 60 20 40 38 Z" fill="url(#ribbonGrad)" opacity="0.9" />
+                <path d="M40 38 Q 30 22 25 14 Q 35 20 40 32 Q 45 20 55 14 Q 50 22 40 38 Z" fill="#d4a017" opacity="0.5" />
+                <circle cx="40" cy="34" r="4" fill="#b8860b" />
+              </svg>
+            </div>
+            <div class="buket-wrap">
+              <img src="beli-buket.png" alt="Buket" class="buket-img" loading="lazy" />
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- SECTION 2: CATS + SPARKLES -->
+      <!-- FINALE 2-COL: CATS + LOVE ARCH -->
       <div class="poster-section" data-in>
-        <div class="gold-divider"></div>
-        <h2 class="section-title">Mali svet</h2>
-        <div class="section-tag">— naše male face —</div>
-
-        <div class="cats-deco">
-          <!-- CATS -->
-          <div class="cats-stage">
-            <img class="cat black" src="cats/kitten1.jpg" alt="Maca" loading="lazy" />
-            <img class="cat white" src="cats/kitten2.jpg" alt="Maca" loading="lazy" />
+        <div class="finale-grid">
+          <div class="cat-large-wrap">
+            <div class="us-heading">
+              <svg class="us-text-svg" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg" aria-label="Us" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <linearGradient id="usTextGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#ffd60a" />
+                    <stop offset="35%" stop-color="#fff5e1" />
+                    <stop offset="55%" stop-color="#f4c95d" />
+                    <stop offset="75%" stop-color="#ff8fa3" />
+                    <stop offset="100%" stop-color="#c9184a" />
+                  </linearGradient>
+                  <filter id="usTextGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#2a0408" flood-opacity="0.45" />
+                    <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#f4c95d" flood-opacity="0.35" />
+                  </filter>
+                </defs>
+                <text class="us-shadow" x="150" y="62" text-anchor="middle" dy="4">Us</text>
+                <text class="us-glow" x="150" y="62" text-anchor="middle" dy="3">Us</text>
+                <text class="us-main" x="150" y="62" text-anchor="middle" dy="3">Us</text>
+              </svg>
+            </div>
+            <img src="male-mace.png" alt="Naše mace" class="cat-large" loading="lazy" />
           </div>
 
-          <!-- BIG LEOPARD HEART (pored maca) -->
-          <div class="big-heart">
-            <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+          <div class="love-arch-panel">
+            <img src="pingvin.png" alt="" class="love-arch-penguin" loading="lazy" aria-hidden="true" />
+            <svg class="love-arch-svg" viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg" aria-label="I love you" preserveAspectRatio="xMidYMid meet">
               <defs>
-                <radialGradient id="heartGlow" cx="50%" cy="50%" r="55%">
-                  <stop offset="0%" stop-color="rgba(244, 201, 93, 0.35)" />
-                  <stop offset="70%" stop-color="rgba(244, 201, 93, 0)" />
-                </radialGradient>
+                <linearGradient id="archTextGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ffd60a" />
+                  <stop offset="35%" stop-color="#fff5e1" />
+                  <stop offset="55%" stop-color="#f4c95d" />
+                  <stop offset="75%" stop-color="#ff8fa3" />
+                  <stop offset="100%" stop-color="#c9184a" />
+                </linearGradient>
+                <filter id="archTextGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#2a0408" flood-opacity="0.45" />
+                  <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#f4c95d" flood-opacity="0.35" />
+                </filter>
+                <path id="loveArch" d="M 12 188 Q 300 8 588 188" fill="none" />
               </defs>
-              <circle cx="200" cy="200" r="180" fill="url(#heartGlow)" />
-              <path d="M200 360 C 80 280 30 210 30 140 C 30 75 80 30 140 30 C 175 30 195 50 200 70 C 205 50 225 30 260 30 C 320 30 370 75 370 140 C 370 210 320 280 200 360 Z"
-                fill="url(#leopard)" stroke="#2a1408" stroke-width="4" stroke-linejoin="round" />
-              <path d="M200 340 C 95 270 55 210 55 145 C 55 90 95 55 140 55 C 170 55 188 72 200 95 C 212 72 230 55 260 55 C 305 55 345 90 345 145 C 345 210 305 270 200 340 Z"
-                fill="none" stroke="#f4c95d" stroke-width="2" stroke-linejoin="round" opacity="0.55" />
-              <path d="M95 110 Q 130 75 175 80" fill="none" stroke="#fff5e1" stroke-width="6" stroke-linecap="round" opacity="0.45" />
-              <path d="M85 140 Q 105 110 135 105" fill="none" stroke="#fff5e1" stroke-width="3" stroke-linecap="round" opacity="0.35" />
+              <text class="arch-shadow" dy="12">
+                <textPath href="#loveArch" startOffset="50%" text-anchor="middle">I love you</textPath>
+              </text>
+              <text class="arch-glow" dy="10">
+                <textPath href="#loveArch" startOffset="50%" text-anchor="middle">I love you</textPath>
+              </text>
+              <text class="arch-outline" dy="10">
+                <textPath href="#loveArch" startOffset="50%" text-anchor="middle">I love you</textPath>
+              </text>
+              <text class="arch-text-path" dy="10">
+                <textPath href="#loveArch" startOffset="50%" text-anchor="middle">I love you</textPath>
+              </text>
             </svg>
+            <div class="arch-leopard-heart" aria-hidden="true">
+              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <path d="M40 72 C18 56 8 38 8 24 C8 10 20 2 32 2 C38 2 40 10 40 18 C40 10 42 2 48 2 C60 2 72 10 72 24 C72 38 62 56 40 72Z" fill="url(#leopard)" stroke="#f4c95d" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="leopard-accent accent-finale" style="--acc-rot:-6deg" aria-hidden="true">
+              <svg viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg"><text x="12" y="46" fill="#f4c95d" font-size="36" font-family="serif">✦</text></svg>
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- FINALE -->
-      <div class="poster-finale leopard-bg" data-in>
-        <h2>Ivona, biram tebe. Danas, sutra, i u svakoj verziji nas.</h2>
-        <div class="signature">— tvoj Nikola, zauvek ❤</div>
       </div>
     </section>
 
@@ -1005,52 +1506,112 @@
       }
       function openEnvelope() {
         envelope.classList.add("opening");
-        setTimeout(() => spawnRoses(), 900);
+        setTimeout(() => spawnBlooms(), 900);
       }
       envelope.addEventListener("click", openEnvelope);
       envelope.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openEnvelope(); } });
 
-      /* ========== STAGE 3: ROSES ========== */
+      /* ========== STAGE 3: BLOOM BURST ========== */
       const roseField = document.getElementById("roseField");
-      const ROSES = 80;
-      const ROSE_IMG = "bela-ruza.png";
-      function spawnRoses() {
-        document.getElementById("stageLetter").classList.remove("active");
-        document.getElementById("stageRoses").classList.add("active");
-        roseField.innerHTML = "";
-        const preload = new Image();
-        preload.src = ROSE_IMG;
-        const TURNS = 5;
-        for (let i = 0; i < ROSES; i++) {
-          const r = document.createElement("div");
-          r.className = "rose spiral";
-          const img = document.createElement("img");
-          img.src = ROSE_IMG;
-          img.alt = "";
-          img.draggable = false;
-          img.loading = "eager";
-          r.appendChild(img);
-          const t = i / ROSES;
-          const angle = t * Math.PI * 2 * TURNS;
-          const dist = 40 + t * 720;
-          const rot = Math.random() * 360;
-          r.style.setProperty("--rot", `${rot.toFixed(0)}deg`);
-          r.style.setProperty("--x", `${(Math.cos(angle) * dist).toFixed(0)}px`);
-          r.style.setProperty("--y", `${(Math.sin(angle) * dist).toFixed(0)}px`);
-          r.style.setProperty("--delay", `${(Math.pow(t, 0.7) * 2200).toFixed(0)}ms`);
-          const size = 60 + Math.random() * 50;
-          r.style.width = `${size.toFixed(0)}px`;
-          r.style.height = `${size.toFixed(0)}px`;
-          roseField.appendChild(r);
-        }
-        setTimeout(() => {
-          document.getElementById("stageRoses").classList.add("full");
-        }, 3000);
-        setTimeout(() => {
-          document.getElementById("stageRoses").classList.add("fade");
-        }, 5000);
-        setTimeout(showPoster, 6200);
+      const BLOOMS = 115;
+      function bloomSVG(i) {
+        const gId = `bg${i}`;
+        const petalFill = `url(#${gId})`;
+        const petals = [0, 60, 120, 180, 240, 300]
+          .map((a) => `<ellipse cx="50" cy="28" rx="14" ry="26" fill="${petalFill}" transform="rotate(${a} 50 50)" />`)
+          .join("");
+        return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="${gId}" cx="40%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="55%" stop-color="#fefcf8" />
+            <stop offset="100%" stop-color="#ede6d8" />
+          </radialGradient></defs>
+          ${petals}
+          <circle cx="50" cy="50" r="10" fill="#f5e6c8" />
+          <circle cx="47" cy="47" r="4" fill="#fff" opacity="0.5" />
+        </svg>`;
       }
+      function startBloomSpiral(stage) {
+        const blooms = [...stage.querySelectorAll(".bloom.enter")];
+        const turns = 3;
+        blooms.forEach((el, i) => {
+          const t = i / blooms.length;
+          const angle = t * Math.PI * 2 * turns + Math.random() * 0.4;
+          const rMid = 220 * (0.55 + Math.random() * 0.35);
+          const rSpiral = 90 + t * 70 + Math.random() * 40;
+          const spin = 540 + t * 420 + Math.random() * 180;
+          el.style.setProperty("--x-mid", `${(Math.cos(angle) * rMid).toFixed(0)}px`);
+          el.style.setProperty("--y-mid", `${(Math.sin(angle) * rMid).toFixed(0)}px`);
+          el.style.setProperty("--x-spiral", `${(Math.cos(angle + 0.9) * rSpiral).toFixed(0)}px`);
+          el.style.setProperty("--y-spiral", `${(Math.sin(angle + 0.9) * rSpiral).toFixed(0)}px`);
+          el.style.setProperty("--x-center", `${(Math.cos(angle + 1.6) * (18 + t * 22)).toFixed(0)}px`);
+          el.style.setProperty("--y-center", `${(Math.sin(angle + 1.6) * (18 + t * 22)).toFixed(0)}px`);
+          el.style.setProperty("--spin", `${spin.toFixed(0)}deg`);
+          el.style.setProperty("--spiral-delay", `${(t * 700).toFixed(0)}ms`);
+          el.classList.remove("enter");
+          el.classList.add("spiral");
+        });
+        stage.classList.add("spiral-phase");
+      }
+      function spawnBlooms() {
+        document.getElementById("stageLetter").classList.remove("active");
+        const stage = document.getElementById("stageRoses");
+        stage.classList.add("active");
+        stage.classList.remove("fade", "spiral-phase");
+        roseField.innerHTML = "";
+        const spreadX = Math.min(window.innerWidth * 0.48, 520);
+        const spreadY = Math.min(window.innerHeight * 0.46, 460);
+        for (let i = 0; i < BLOOMS; i++) {
+          const el = document.createElement("div");
+          el.className = "bloom enter";
+          const angle = Math.random() * Math.PI * 2;
+          const radius = 560 + Math.random() * 420;
+          const xStart = Math.cos(angle) * radius;
+          const yStart = Math.sin(angle) * radius;
+          const xEnd = (Math.random() - 0.5) * spreadX * 2;
+          const yEnd = (Math.random() - 0.5) * spreadY * 2;
+          const rot = Math.random() * 360;
+          const t = i / BLOOMS;
+          const size = 130 + Math.random() * 110;
+          el.style.width = `${size.toFixed(0)}px`;
+          el.style.height = `${size.toFixed(0)}px`;
+          el.style.setProperty("--x-start", `${xStart.toFixed(0)}px`);
+          el.style.setProperty("--y-start", `${yStart.toFixed(0)}px`);
+          el.style.setProperty("--x-end", `${xEnd.toFixed(0)}px`);
+          el.style.setProperty("--y-end", `${yEnd.toFixed(0)}px`);
+          el.style.setProperty("--rot", `${rot.toFixed(0)}deg`);
+          el.style.setProperty("--spin", `${(540 + Math.random() * 360).toFixed(0)}deg`);
+          el.style.setProperty("--delay", `${(Math.pow(t, 0.5) * 2200).toFixed(0)}ms`);
+          el.style.setProperty("--fade-delay", `${(Math.random() * 500).toFixed(0)}ms`);
+          el.innerHTML = bloomSVG(i);
+          roseField.appendChild(el);
+        }
+        setTimeout(() => startBloomSpiral(stage), 3400);
+        setTimeout(() => stage.classList.add("fade"), 9400);
+        setTimeout(showPoster, 11200);
+      }
+
+      /* scattered deco on red poster bg */
+      (function initPosterDeco() {
+        const deco = document.getElementById("posterDeco");
+        if (!deco) return;
+        const types = [
+          `<svg viewBox="0 0 20 20"><text x="2" y="15" fill="#f4c95d" font-size="12" opacity="0.8">♥</text></svg>`,
+          `<svg viewBox="0 0 18 18"><text x="1" y="14" fill="#ff8fa3" font-size="10" opacity="0.7">✦</text></svg>`,
+          `<svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="#f4c95d" opacity="0.5"/></svg>`,
+        ];
+        for (let i = 0; i < 22; i++) {
+          const d = document.createElement("div");
+          d.className = "deco-item";
+          d.style.left = `${(Math.random() * 94 + 3).toFixed(1)}%`;
+          d.style.top = `${(Math.random() * 94 + 3).toFixed(1)}%`;
+          d.style.width = `${10 + Math.random() * 10}px`;
+          d.style.animationDelay = `${(-Math.random() * 18).toFixed(1)}s`;
+          d.style.animationDuration = `${(14 + Math.random() * 12).toFixed(1)}s`;
+          d.innerHTML = types[i % types.length];
+          deco.appendChild(d);
+        }
+      })();
 
       /* ========== STAGE 4: POSTER ========== */
       function showPoster() {
@@ -1089,6 +1650,21 @@
       });
 
       /* ========== PHOTO UPLOAD ========== */
+      const DEFAULT_PHOTOS = {
+        "1": "photos/her.jpeg",
+        "2": "photos/mek.jpeg",
+        "3": "photos/zenba.jpeg",
+        "4": "photos/smile.jpeg",
+      };
+      function setPolaroidImage(photo, src, alt) {
+        photo.innerHTML = "";
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = alt || "";
+        img.loading = "lazy";
+        img.onerror = function() { this.classList.add("broken"); };
+        photo.appendChild(img);
+      }
       document.querySelectorAll(".polaroid").forEach((card) => {
         const slot = card.dataset.photo;
         const photo = card.querySelector(".photo");
@@ -1097,14 +1673,11 @@
         input.style.display = "none";
         card.appendChild(input);
 
-        // restore from localStorage
+        // localStorage override, otherwise default poster photos
         try {
           const saved = localStorage.getItem(`love_photo_${slot}`);
           if (saved) {
-            photo.innerHTML = "";
-            const img = document.createElement("img");
-            img.src = saved;
-            photo.appendChild(img);
+            setPolaroidImage(photo, saved, card.querySelector(".caption")?.textContent || "");
           }
         } catch {}
 
@@ -1116,13 +1689,14 @@
           reader.onload = (ev) => {
             const data = ev.target.result;
             try { localStorage.setItem(`love_photo_${slot}`, data); } catch {}
-            photo.innerHTML = "";
-            const img = document.createElement("img");
-            img.src = data;
-            photo.appendChild(img);
+            setPolaroidImage(photo, data, card.querySelector(".caption")?.textContent || "");
           };
           reader.readAsDataURL(file);
         });
+      });
+      /* fallback for default polaroid images */
+      document.querySelectorAll(".polaroid .photo img").forEach(img => {
+        img.onerror = function() { this.classList.add("broken"); };
       });
     </script>
   </body>
