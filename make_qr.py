@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 ErrorCorrect = qrcode.constants.ERROR_CORRECT_H
 LANCZOS = Image.LANCZOS if hasattr(Image, "LANCZOS") else Image.ANTIALIAS
 
-URL = "https://deliver-distributors-travel-faculty.trycloudflare.com"
+URL = "https://zastavaa.github.io/Ivona/"
 OUT = r"D:\Opencode\love\qr-code.png"
 OUT_FRAME = r"D:\Opencode\love\qr-card.png"
 
